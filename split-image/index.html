@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Split an image into a grid for Instagram, cut a collage into separate photos, or crop every product photo on a plain background. Free, private, no upload.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Split Image Online: Free Image Splitter and Grid Maker | Slicemat</title>
+<style>
+:root{color-scheme:light;--bg:#f5f6f8;--surface:#fff;--soft:#f0f2f5;--ink:#161d26;--on-ink:#fff;--muted:#667180;--line:#e2e5ea;--cta:#ff5a36;--cta2:#ee4a26;--tint:#fff1ed;--tint-ink:#c2371a;--good:#16795a;--bad:#c0392f;--blue:#2f4bff;--r:14px;--check:#e9ecf0}
+[data-theme="dark"]{color-scheme:dark;--bg:#0f1418;--surface:#171e25;--soft:#1e2830;--ink:#eef2f5;--on-ink:#10161b;--muted:#9aa7b4;--line:#2b3641;--tint:#3a211b;--tint-ink:#ff9a80;--good:#5fc8a0;--bad:#ff8c82;--check:#26313b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}button:disabled,input:disabled,select:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{width:min(1360px,calc(100% - 40px));margin:auto}.hidden,[hidden]{display:none!important}.muted{color:var(--muted)}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.head{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font:800 21px 'Bricolage Grotesque',Figtree,sans-serif;letter-spacing:-.6px;color:var(--ink);text-decoration:none}
+.brandmark{width:30px;height:30px;border-radius:8px;background:#1d4a42;position:relative;overflow:hidden}.brandmark:before,.brandmark:after{content:"";position:absolute;background:var(--cta)}.brandmark:before{left:13px;top:0;bottom:0;width:3px}.brandmark:after{top:13px;left:0;right:0;height:3px}
+.headtools{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 15px;font-weight:650;transition:background .15s,border-color .15s}
+.btn:hover:not(:disabled){background:var(--soft);border-color:#c3c9d1}
+.btn.primary{background:var(--cta);border-color:var(--cta);color:#fff}.btn.primary:hover:not(:disabled){background:var(--cta2);border-color:var(--cta2)}
+.btn.gold{background:var(--tint);border-color:transparent;color:var(--tint-ink)}.btn.gold:hover:not(:disabled){background:var(--tint);filter:brightness(.97);border-color:transparent}
+.btn.soft{background:var(--soft)}.btn.small{padding:7px 11px;font-size:13px}.btn.icon{width:38px;height:38px;padding:0;font-size:17px}.btn.on{border-color:var(--cta);box-shadow:0 0 0 3px var(--tint)}
+.textinput,select,input[type=number],input.textinput{border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:9px 11px;font-size:14px;min-width:0}
+input[type=range]{width:100%;accent-color:var(--cta);margin:4px 0 0}
+input[type=color]{width:100%;height:40px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer}
+.hero{padding:40px 0 22px;max-width:860px}
+.hero h1{font:800 clamp(32px,5vw,56px)/1.02 'Bricolage Grotesque',Figtree,sans-serif;letter-spacing:-1.8px;margin:0 0 12px}
+.hero p{margin:0;color:var(--muted);font-size:17px;max-width:680px}
+.trust{display:flex;flex-wrap:wrap;gap:8px 18px;list-style:none;padding:0;margin:16px 0 0;font-size:13px;color:var(--muted)}.trust li:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--good);margin-right:7px;margin-inline-end:7px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:20px;align-items:start;padding-bottom:30px}.editor{min-width:0}
+.stage{position:relative;min-height:520px;border:1px solid var(--line);border-radius:20px;background:var(--soft) radial-gradient(circle,var(--line) 1px,transparent 1.4px) 0 0/20px 20px;display:grid;place-items:center;padding:22px;overflow:hidden}
+.stage.empty{background:var(--surface);border:2px dashed #c4cad3}.stage.empty:hover,.stage.over{border-color:var(--cta)}
+.stage canvas{display:block;max-width:100%;max-height:74vh;touch-action:none;cursor:crosshair;background:#fff;border-radius:4px;box-shadow:0 1px 2px #0002,0 18px 40px -12px #0004}
+.stage.picking canvas{cursor:copy}
+.stage.over:after{content:attr(data-drop);position:absolute;inset:10px;border:3px dashed var(--cta);border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--surface) 88%,transparent);font-weight:800;font-size:22px;pointer-events:none}
+.dropzone{text-align:center;width:min(540px,100%);padding:20px}
+.dropicon{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;background:var(--tint);color:var(--tint-ink);display:grid;place-items:center;font-size:28px;font-weight:700}
+.dropzone h2{font:800 26px/1.15 'Bricolage Grotesque',Figtree,sans-serif;letter-spacing:-.8px;margin:0 0 8px}.dropzone p{color:var(--muted);margin:0 auto 20px;max-width:440px}
+.dropactions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.dropactions .btn{padding:12px 20px}
+.dropzone .callout{text-align:center;margin-top:16px}
+.stagehint{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px;padding:10px 4px}
+.queue{display:flex;gap:8px;overflow:auto;padding:2px 0 10px}
+.qitem{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:7px 10px;display:flex;gap:9px;align-items:center;min-width:170px;max-width:240px;text-align:left;text-align:start;flex:none}.qitem.active{border-color:var(--cta);box-shadow:0 0 0 3px var(--tint)}
+.qitem img{width:36px;height:36px;object-fit:cover;border-radius:7px;background:var(--soft);flex:none}.qitem span{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:650}.qitem small{display:block;color:var(--muted);font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.qitem .remove{border:0;background:transparent;color:var(--muted);padding:2px 5px;margin-left:auto;margin-inline-start:auto}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:6px 18px 18px;position:sticky;top:78px;max-height:calc(100vh - 94px);overflow:auto}
+.panelhead{display:flex;justify-content:space-between;align-items:center;padding:12px 0 4px}.panel h2{font:700 16px Figtree,sans-serif;margin:0}
+.group{padding:16px 0;border-top:1px solid var(--line)}.panelhead+.group{border-top:0}
+.gtitle{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;margin-bottom:12px}.step{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--on-ink);font-size:12px;font-weight:800}
+.help{font-size:12px;color:var(--muted);font-weight:500;line-height:1.45;margin-top:4px}
+details.group>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700;font-size:15px}details.group>summary::-webkit-details-marker{display:none}
+details.group>summary:after{content:"+";font-size:20px;line-height:1;color:var(--muted);font-weight:500}details[open].group>summary:after{content:"–"}details.group[open]>summary{margin-bottom:12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}.chip{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:13px;font-weight:650}.chip:hover{border-color:#aab1bb}.chip.active{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.modeseg{display:grid;grid-template-columns:1fr 1fr;gap:6px}.modeseg .chip{padding:11px 8px;font-size:14px}
+.fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.field{margin-top:10px}.fieldrow .field{margin-top:0}
+.field label,.fieldlabel{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);font-weight:650;margin-bottom:5px}.field label b{color:var(--ink);font-weight:700}.field input:not([type=range]):not([type=checkbox]),.field select{width:100%}
+.inlinecheck{display:flex;align-items:center;gap:9px;font-size:14px;margin-top:10px}.inlinecheck input{width:17px;height:17px;accent-color:var(--cta);flex:none}
+.callout{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.5}
+.autoresult{display:none;margin-top:10px;color:var(--good);font-size:13px;font-weight:650}.autoresult.show{display:block}.autoresult.bad{color:var(--bad)}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid var(--line);vertical-align:-1px;margin:0 3px}
+.panelactions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.panelactions .wide{grid-column:1/-1;padding:13px}
+.results,.report{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:24px}
+.resulthead{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.resulthead h2{margin:0;font:800 24px 'Bricolage Grotesque',Figtree,sans-serif;letter-spacing:-.6px}.resulthead p{margin:3px 0 0;color:var(--muted);font-size:13px}.resultbtns{display:flex;gap:8px;flex-wrap:wrap}
+.slices{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.slice{border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:8px;min-width:0}
+.slice canvas{width:100%;height:170px;object-fit:contain;display:block;border-radius:6px;background:conic-gradient(var(--check) 25%,var(--surface) 0 50%,var(--check) 0 75%,var(--surface) 0) 0 0/16px 16px}
+.slice .smeta{font-size:12px;font-weight:700;padding:8px 2px 6px;display:flex;justify-content:space-between;gap:6px}.slice .smeta small{color:var(--muted);font-weight:500}.slice button{width:100%}
+.report table{width:100%;border-collapse:collapse;font-size:13px}.report td{padding:7px 8px;border-top:1px solid var(--line);word-break:break-all}.report td:last-child{white-space:nowrap;text-align:right;text-align:end;font-weight:650}.report tr.flag td{color:var(--bad)}
+.reportwrap{max-height:340px;overflow:auto}
+.footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:13px;margin-top:26px}.footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.footer b{color:var(--ink)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,16px);background:var(--ink);color:var(--on-ink);padding:11px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60;font-size:14px;max-width:min(92vw,600px);text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+.progress{position:fixed;inset:0;z-index:55;background:#0008;display:grid;place-items:center;padding:20px}
+.pbox{background:var(--surface);border-radius:16px;padding:22px;width:min(460px,100%);box-shadow:0 20px 60px #0006}
+.pbox b{display:block;font-size:17px;margin-bottom:12px}.pbar{height:10px;border-radius:99px;background:var(--soft);overflow:hidden}.pbar i{display:block;height:100%;width:0;background:var(--cta);transition:width .15s}
+.ptext{font-size:13px;color:var(--muted);margin:10px 0 14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1000px){.workspace{grid-template-columns:1fr}.panel{position:static;max-height:none}.stage,.stage.empty{min-height:340px}}
+@media(max-width:560px){.wrap{width:calc(100% - 24px)}.hero{padding-top:26px}.stage,.stage.empty{min-height:280px;padding:12px}.slices{grid-template-columns:repeat(2,minmax(0,1fr))}.resultbtns,.resultbtns .btn{width:100%}.headtools select{width:96px!important}.panel{padding:2px 14px 14px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.warnhelp{color:var(--tint-ink)!important;background:var(--tint);padding:8px 10px;border-radius:9px;font-weight:600}
+header .head{gap:12px}nav.main{display:flex;gap:2px;margin-right:auto;margin-left:22px}nav.main a{padding:8px 12px;border-radius:9px;color:var(--muted);text-decoration:none;font-weight:650;font-size:14px}nav.main a:hover,nav.main a.on{background:var(--soft);color:var(--ink)}
+.hero.center{margin:0 auto;text-align:center;padding:56px 0 26px}.hero.center p{margin:0 auto}.hero.center .trust{justify-content:center}
+.search{margin:24px auto 0;max-width:520px}.search input{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:15px 18px;font-size:16px}
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:10px 0 40px}
+.tool{display:flex;flex-direction:column;gap:6px;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}.tool:hover{border-color:var(--cta);transform:translateY(-2px)}
+.tool .ti{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:22px;background:var(--tint);color:var(--tint-ink);margin-bottom:8px}.tool b{font-size:18px}.tool span{color:var(--muted);font-size:14px}
+.empty-search{color:var(--muted);text-align:center;padding:30px}
+.content{max-width:820px;margin:26px auto 64px}.content h2{font:800 26px 'Bricolage Grotesque',Figtree,sans-serif;letter-spacing:-.6px;margin:38px 0 12px}.content p,.content li{color:var(--muted)}.content li{margin:7px 0}.content ol{padding-left:22px}
+.faq details{border-top:1px solid var(--line);padding:14px 0}.faq summary{font-weight:700;cursor:pointer}.faq p{margin:8px 0 0}.related{display:flex;gap:10px;flex-wrap:wrap}
+.stage.files{place-items:start stretch;min-height:360px;align-content:start}.filelist{display:flex;flex-direction:column;gap:10px;width:100%}
+.item{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.item img{width:54px;height:54px;object-fit:cover;border-radius:8px;background:var(--soft);flex:none}.imeta{flex:1;min-width:0}.imeta b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.imeta small{color:var(--muted);font-size:13px}.item .btn.icon{width:34px;height:34px}.addmore{padding-top:4px}
+input[type=range]{width:100%;accent-color:var(--cta)}.mini{display:none}.show-mini{display:block}
+.footer .links{display:flex;gap:14px;flex-wrap:wrap}.footer a{color:var(--muted);text-decoration:none}.footer a:hover{color:var(--ink)}
+.tools{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}a.btn{text-decoration:none}.content a{color:var(--tint-ink);text-underline-offset:3px}.content a.btn{color:var(--ink)}
+@media(max-width:860px){nav.main{display:none}.head{justify-content:space-between}}
+</style>
+</head>
+<body>
+<header><div class="wrap head"><a class="brand" href="../"><span class="brandmark"></span>Slicemat</a><nav class="main" aria-label="Tools"><a href="../split-image/" class="on">Split Image</a><a href="../compress-image/">Compress Image · MB to KB</a><a href="../resize-image/">Resize Image</a><a href="../convert-image/">Convert Image</a></nav><div class="headtools"><select id="language" class="textinput" aria-label="Language" style="width:112px"><option value="en">English</option><option value="es">Español</option><option value="ur">اردو</option></select><button class="btn small" id="install" hidden>Install app</button><button class="btn icon" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode">☾</button></div></div></header>
+<div class="wrap">
+<section class="hero"><h1 data-i18n="headline">Split any image. Keep every panel in place.</h1><p data-i18n="intro">Cut a collage into a grid, or auto-detect every product box on a plain background. Batch whole folders and download ready-to-post slices.</p>
+<ul class="trust"><li data-i18n="trust1">Free, no watermark</li><li data-i18n="trust2">Files stay on your device</li><li data-i18n="trust3">PNG, JPG, WebP, BMP, ZIP or PDF</li><li data-i18n="trust4">Whole folders, same structure</li></ul></section>
+<main class="workspace">
+<section class="editor">
+<div class="stage empty" id="stage" data-drop="Drop images or folders to add them"><div class="dropzone" id="dropzone"><div class="dropicon">↑</div><h2 data-i18n="dropTitle">Drop images or a whole folder here</h2><p data-i18n="dropText">Use Grid for collages, or Detect boxes for product photos on a white or plain background. You can also paste an image.</p><div class="dropactions"><button class="btn primary" id="choose" data-i18n="choose">Choose image(s)</button><button class="btn" id="chooseFolder" data-i18n="chooseFolder">Choose folder</button><button class="btn" id="sample" data-i18n="sample">Try a sample</button></div><div class="callout">JPG, PNG, WebP, BMP, GIF · Multiple files and sub-folders supported</div></div><canvas id="preview" class="hidden" aria-label="Image preview"></canvas></div>
+<div class="stagehint"><span id="imageinfo">No image selected</span><span id="dragHint"></span></div>
+<div class="queue hidden" id="queue" aria-label="Uploaded image queue"></div>
+</section>
+
+<aside class="panel">
+<div class="panelhead"><h2 data-i18n="controls">Controls</h2><div style="display:flex;gap:5px"><button class="btn icon small" id="undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>↶</button><button class="btn icon small" id="redo" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>↷</button></div></div>
+
+<section class="group"><div class="gtitle"><span class="step">1</span><span data-i18n="modeTitle">Split mode</span></div>
+<div class="modeseg"><button class="chip" data-mode="grid" data-i18n="modeGrid">▦ Grid</button><button class="chip" data-mode="boxes" data-i18n="modeBoxes">◳ Detect boxes</button></div>
+<div class="callout" id="modeHelp"></div></section>
+
+<!-- GRID MODE -->
+<section class="group gridOnly"><div class="gtitle"><span class="step">2</span><span data-i18n="presets">Layout</span></div>
+<div class="seg" id="presets"><button class="chip" data-layout="3x2">3 × 2</button><button class="chip" data-layout="3x3">3 × 3</button><button class="chip" data-layout="4x2">4 × 2</button><button class="chip" data-layout="2x3">2 × 3</button><button class="chip" data-layout="igcarousel">Instagram carousel</button><button class="chip" data-layout="igpuzzle">Profile puzzle 3×3</button><button class="chip" data-layout="pinterest">Pinterest vertical</button></div>
+<button class="btn gold" id="autodetect" style="width:100%;margin-top:12px">✦ <span data-i18n="detectBtn">Detect grid automatically</span></button><div class="autoresult" id="autostatus"></div><div class="callout" data-i18n="autoHelp">Best for collages with visible white or light gutters between pictures. You can drag every detected cut line afterwards.</div></section>
+<details class="group gridOnly"><summary><span data-i18n="customGrid">Custom grid</span></summary>
+<div class="field" style="margin-top:0"><label for="rowPattern" data-i18n="rowPattern">Images per row (e.g. 3,6)</label><input id="rowPattern" class="textinput" value="3,3,3" placeholder="3,6 or 4,4,2"></div><div class="help" data-i18n="rowHelp">Each number is the number of panels in that row. Example: 3,6 creates 3 panels across the top and 6 across the bottom.</div>
+<div class="fieldrow"><div class="field"><label for="uniformRows" data-i18n="uniformRows">Uniform rows</label><input id="uniformRows" type="number" min="1" max="20" value="3"></div><div class="field"><label for="uniformCols" data-i18n="uniformCols">Uniform columns</label><input id="uniformCols" type="number" min="1" max="20" value="3"></div></div>
+<div class="panelactions" style="margin-top:10px"><button class="btn soft" id="applyCustom" data-i18n="applyRows">Apply row pattern</button><button class="btn" id="applyUniform" data-i18n="applyUniform">Apply uniform</button></div></details>
+<details class="group gridOnly"><summary><span data-i18n="smartCrop">Crop ratio</span></summary>
+<div class="field" style="margin-top:0"><label for="ratio" data-i18n="tileRatio">Individual tile ratio</label><select id="ratio"><option value="auto" data-i18n="ratioAuto">Original tile ratio</option><option value="1:1">Square · 1:1</option><option value="4:5">Portrait · 4:5</option><option value="3:4">Portrait · 3:4</option><option value="2:3">Pinterest · 2:3</option><option value="16:9">Landscape · 16:9</option><option value="9:16">Story · 9:16</option></select></div>
+<label class="inlinecheck"><input type="checkbox" id="smart"> <span data-i18n="smartCheck">Smart focal crop when a ratio is selected</span></label><button class="btn soft small" id="focus" style="margin-top:10px;width:100%" data-i18n="findFocus">Find important area</button></details>
+
+<!-- BOX MODE -->
+<section class="group boxOnly"><div class="gtitle"><span class="step">2</span><span data-i18n="detectTitle">Box detection</span></div>
+<div class="field" style="margin-top:0"><label for="tol"><span data-i18n="tol">Background tolerance</span><b id="tolVal"></b></label><input type="range" id="tol" min="5" max="150" step="1"><div class="help" data-i18n="tolHelp">Higher ignores more of the background colour. Raise it for JPEG noise or light shadows.</div></div>
+<div class="field"><label for="close"><span data-i18n="close">Merge distance (px)</span><b id="closeVal"></b></label><input type="range" id="close" min="0" max="80" step="1"><div class="help" data-i18n="closeHelp">One box breaks into pieces → increase. Two nearby boxes join → decrease.</div></div>
+<div class="fieldrow"><div class="field"><label for="minArea" data-i18n="minArea">Min size (% of image)</label><input type="number" id="minArea" min="0.05" max="60" step="0.1"></div><div class="field"><label for="pad" data-i18n="pad">Padding (px)</label><input type="number" id="pad" min="0" max="1000" step="1"></div></div>
+<div class="help" data-i18n="minHelp">A small box is missed → lower the min size (e.g. 0.4).</div>
+<div class="field"><label for="soft"><span data-i18n="soft">Edge softness (px)</span><b id="softVal"></b></label><input type="range" id="soft" min="0" max="6" step="0.5"></div>
+<label class="inlinecheck"><input type="checkbox" id="autoBg"> <span data-i18n="autoBg">Detect the photo's background colour automatically</span></label>
+<div class="fieldrow"><div class="field"><label for="bgColor" data-i18n="bgPick">Photo background</label><input type="color" id="bgColor"></div><div class="field"><label>&nbsp;</label><button class="btn soft" id="pickBg" style="width:100%;height:40px" data-i18n="pickBg">🎯 Pick from photo</button></div></div>
+<div class="autoresult" id="boxStatus"></div>
+<button class="btn gold" id="redetect" style="width:100%;margin-top:12px" data-i18n="redetect">↻ Re-detect boxes</button>
+<div class="callout" data-i18n="boxNote">Works on plain or white backgrounds. White areas inside a box are kept. Each image in the batch is detected separately.</div></section>
+
+<details class="group"><summary><span data-i18n="previewSettings">Preview settings</span></summary>
+<label class="inlinecheck" style="margin-top:0"><input type="checkbox" id="showCuts"> <span data-i18n="showCuts">Show cut lines / boxes</span></label><label class="inlinecheck"><input type="checkbox" id="showNums"> <span data-i18n="showNums">Show slice numbers</span></label>
+<div class="field" style="margin-top:12px"><label for="order" data-i18n="sliceOrder">Slice numbering</label><select id="order"><option value="read" data-i18n="orderRead">Reading order (left to right)</option><option value="reverse" data-i18n="orderReverse">Instagram posting order (reverse)</option></select></div></details>
+
+<section class="group"><div class="gtitle"><span class="step">3</span><span data-i18n="output">Output</span></div>
+<div class="seg" id="outPresets" style="margin-bottom:12px"><button class="chip" data-op="insta">For Instagram</button><button class="chip" data-op="web">For website</button><button class="chip" data-op="max">Best quality</button></div>
+<div class="fieldrow" style="margin-top:0"><div class="field"><label for="format" data-i18n="format">Format</label><select id="format"><option value="image/png">PNG</option><option value="image/webp">WebP</option><option value="image/jpeg">JPG</option><option value="image/bmp">BMP</option></select></div><div class="field"><label for="quality"><span data-i18n="quality">Quality</span><b id="qualityVal"></b></label><input type="range" id="quality" min="1" max="100" step="1"></div></div>
+<div class="help" id="fmtHelp" style="margin:0 0 12px"></div>
+<div class="field"><label for="sizeMode" data-i18n="sizeMode">Size</label><select id="sizeMode"><option value="original" data-i18n="sizeOriginal">Original size</option><option value="width" data-i18n="sizeWidth">Fixed width</option><option value="fixed" data-i18n="sizeFixed">Fixed canvas W × H</option></select></div>
+<div class="field" id="widthField"><label for="outWidth" data-i18n="width">Width (px)</label><input type="number" id="outWidth" min="16" max="10000" step="1" list="widths"><datalist id="widths"><option value="1080"><option value="1500"><option value="2048"><option value="3000"></datalist></div>
+<div class="fieldrow" id="fixedFields"><div class="field"><label for="outW" data-i18n="width">Width (px)</label><input type="number" id="outW" min="16" max="10000" step="1"></div><div class="field"><label for="outH" data-i18n="height">Height (px)</label><input type="number" id="outH" min="16" max="10000" step="1"></div></div>
+<label class="inlinecheck" id="upscaleRow"><input type="checkbox" id="upscale"> <span data-i18n="upscale">Enlarge small slices to fill the canvas</span></label>
+<div class="fieldrow"><div class="field"><label for="bgMode" data-i18n="bgMode">Background</label><select id="bgMode"><option value="original" data-i18n="bgOriginal">Keep original</option><option value="transparent" data-i18n="bgTransparent">Transparent cut-out</option><option value="color" data-i18n="bgColorOpt">Solid colour cut-out</option></select></div><div class="field" id="fillField"><label for="fill" data-i18n="fill">Fill colour</label><input type="color" id="fill"></div></div>
+<div class="help" id="bgHelp"></div>
+<label class="inlinecheck"><input type="checkbox" id="perFolder"> <span data-i18n="perFolder">Put each image in its own folder in the ZIP</span></label></section>
+
+<section class="group" id="kbGroup"><div class="gtitle"><span class="step">⇩</span><span>Reduce file size · MB to KB</span></div><div class="seg" id="kbChips"><button class="chip" data-kb="0">Off</button><button class="chip" data-kb="50">50 KB</button><button class="chip" data-kb="100">100 KB</button><button class="chip" data-kb="200">200 KB</button><button class="chip" data-kb="500">500 KB</button><button class="chip" data-kb="1024">1 MB</button></div><div class="field"><label for="maxKB">Largest size for each slice (KB)</label><input id="maxKB" type="number" min="0" step="10" placeholder="Off"></div><div class="help" id="kbHelp"></div></section>
+<section class="group"><div class="gtitle"><span class="step">4</span><span data-i18n="export">Download</span></div>
+<div class="panelactions"><button class="btn primary wide" id="downloadZip" data-i18n="downloadZip">Download all · ZIP</button><button class="btn soft" id="downloadPdf" data-i18n="downloadPdf">Export PDF</button><button class="btn soft" id="downloadAll" data-i18n="downloadAll">Current · ZIP</button><button class="btn wide" id="clear" data-i18n="clear">Clear all</button></div>
+<div class="callout" data-i18n="exportHelp">Every image in the queue is processed. Folder uploads keep the same sub-folder structure inside the ZIP. Files are named like product_1, product_2.</div></section>
+<section class="group"><div class="gtitle" style="margin-bottom:10px"><span data-i18n="batch">Bulk image queue</span><span class="help" id="batchCount" style="margin:0">0 files</span></div><div class="panelactions"><button class="btn soft" id="addMore" data-i18n="addMore">＋ Images</button><button class="btn soft" id="addFolder" data-i18n="addFolder">📁 Folder</button></div></section>
+</aside>
+</main>
+<section class="results hidden" id="results"><div class="resulthead"><div><h2 data-i18n="yourSlices">Your slices</h2><p id="resultSummary"></p></div><div class="resultbtns"><button class="btn primary" id="downloadZip2" data-i18n="downloadZip">Download all · ZIP</button><button class="btn gold" id="downloadPdf2" data-i18n="downloadPdf">Export PDF</button></div></div><div class="slices" id="sliceList"></div></section>
+<section class="report" id="report" hidden><div class="resulthead"><div><h2 data-i18n="report">Batch report</h2><p id="reportSummary"></p></div><button class="btn small" id="closeReport">×</button></div><div class="reportwrap"><table><tbody id="reportRows"></tbody></table></div></section>
+</div>
+<div class="wrap"><section class="content"><h2>How to use it</h2><ol><li>Add an image, several images or a whole folder.</li><li>Pick Grid for collages and Instagram splits, or Detect boxes for product photos on a plain background.</li><li>Choose JPG, PNG or WebP, set a size limit if you need one, and download a ZIP.</li></ol><h2>Split an image into a grid for Instagram</h2>
+<p>Instagram shows three posts in every row of your profile. A 3×3 split turns one wide photo into nine posts that line up when a visitor opens your page. Choose <b>Profile puzzle 3×3</b>, set the numbering to <b>Instagram posting order</b>, and download the slices. Post slice 1 first and keep going, because Instagram puts your newest post at the top left. A 3×1 or 4×1 split works the same way for a swipeable carousel.</p>
+<p>Try the same photo at 2×2, 3×2 and 4×2 before you settle. Faces and text look best when no cut line runs through them, and the zoom and crop-ratio options let you move the picture inside the grid.</p>
+<h2>Cut a collage into separate pictures</h2>
+<p>Drop in a collage with white or light gaps between the photos and press <b>Detect grid automatically</b>. Slicemat finds the gaps and draws orange cut lines, even when the top row has 4 photos and the bottom row has 2. Drag any line to fix it, or type a row pattern such as <b>4,2</b> if you already know the layout.</p>
+<h2>Find every product photo on a plain background</h2>
+<p>Product sheets, catalogue scans and flat-lay photos often show many items on one white background. Switch to <b>Detect boxes</b> and Slicemat outlines each item and crops it on its own. If one box breaks into pieces, raise the merge distance. If two nearby boxes join, lower it. You can add padding, keep the original background, or save every item as a transparent cut-out.</p>
+<h2>Keep the slices small enough to upload</h2>
+<p>Big photos make big slices. Open <b>Reduce file size</b>, pick 100 KB, 200 KB or 500 KB, and Slicemat lowers the quality of each slice until it fits. It shrinks the slice a little only when quality alone is not enough. If you only need to shrink single photos, the <a href="../compress-image/">image compressor</a> does the same job for whole batches.</p>
+<h2>JPG, PNG or WebP: which one should you download?</h2>
+<ul><li><b>JPG</b> opens everywhere and suits Instagram, WhatsApp and email.</li><li><b>PNG</b> keeps every pixel and any transparency, so the files are larger.</li><li><b>WebP</b> gives small files for websites. Instagram and WhatsApp can reject it, and then your grid will not show, so use JPG for social posts.</li></ul>
+<p>Need another format afterwards? The <a href="../convert-image/">image converter</a> switches between all three.</p>
+<h2>Your images stay on your device</h2>
+<p>Slicemat does all the cutting inside your browser. Nothing uploads to a server, so private photos and unreleased product shots stay with you. You can drop in a whole folder, process every image with the same settings, and download one ZIP.</p><h2>Questions people ask</h2><div class="faq"><details><summary>How do I split an image into a 3×3 Instagram grid?</summary><p>Choose Profile puzzle 3×3, set Slice numbering to Instagram posting order, and download the slices. Post slice 1 first.</p></details><details><summary>Can Slicemat find each photo in a collage on its own?</summary><p>Yes. Detect grid automatically finds the gaps between photos, including uneven rows such as 4 photos on top and 2 below. Detect boxes outlines each item on a plain background.</p></details><details><summary>How do I make each slice smaller, from MB to KB?</summary><p>Open Reduce file size and pick 50, 100, 200 or 500 KB. Slicemat lowers the quality until every slice fits.</p></details><details><summary>Why does my grid not show on Instagram after I download WebP?</summary><p>Instagram and WhatsApp can reject WebP files. Download JPG instead.</p></details><details><summary>Are my images uploaded?</summary><p>No. Everything runs in your browser.</p></details></div><h2>More tools</h2><div class="related"><a class="btn" href="../compress-image/">Compress Image · MB to KB</a><a class="btn" href="../resize-image/">Resize Image</a><a class="btn" href="../convert-image/">Convert Image</a></div></section></div><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I split an image into a 3×3 Instagram grid?", "acceptedAnswer": {"@type": "Answer", "text": "Choose Profile puzzle 3×3, set Slice numbering to Instagram posting order, and download the slices. Post slice 1 first."}}, {"@type": "Question", "name": "Can Slicemat find each photo in a collage on its own?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Detect grid automatically finds the gaps between photos, including uneven rows such as 4 photos on top and 2 below. Detect boxes outlines each item on a plain background."}}, {"@type": "Question", "name": "How do I make each slice smaller, from MB to KB?", "acceptedAnswer": {"@type": "Answer", "text": "Open Reduce file size and pick 50, 100, 200 or 500 KB. Slicemat lowers the quality until every slice fits."}}, {"@type": "Question", "name": "Why does my grid not show on Instagram after I download WebP?", "acceptedAnswer": {"@type": "Answer", "text": "Instagram and WhatsApp can reject WebP files. Download JPG instead."}}, {"@type": "Question", "name": "Are my images uploaded?", "acceptedAnswer": {"@type": "Answer", "text": "No. Everything runs in your browser."}}]}</script><footer class="footer"><div class="wrap"><div><b>Slicemat</b> · Free image tools that run in your browser. Your files are never uploaded.</div><div class="links"><a href="../split-image/">Split Image</a><a href="../compress-image/">Compress Image · MB to KB</a><a href="../resize-image/">Resize Image</a><a href="../convert-image/">Convert Image</a></div><span>© <span id="year"></span> Slicemat</span></div></footer>
+<div class="progress" id="progress" hidden><div class="pbox" role="dialog" aria-modal="true" aria-labelledby="ptitle"><b id="ptitle">Processing…</b><div class="pbar"><i id="pfill"></i></div><div class="ptext" id="ptext"></div><button class="btn small" id="pcancel" data-i18n="cancel">Cancel</button></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="picker" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,.bmp" multiple hidden>
+<input type="file" id="folderPicker" webkitdirectory directory multiple hidden>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const canvas=$('preview'),ctx=canvas.getContext('2d');
+
+/* ---------------- Translations ---------------- */
+const I18N={
+en:{headline:'Split an image into a grid, or cut out every photo.',intro:'Free image splitter for Instagram grids and collages. It also finds each product photo on a plain background. Reduce every slice from MB to KB and download them as a ZIP.',trust1:'Free, no watermark',trust2:'Files stay on your device',trust3:'PNG, JPG, WebP, BMP, ZIP or PDF',trust4:'Whole folders, same structure',dropTitle:'Drop images or a whole folder here',dropText:'Use Grid for collages, or Detect boxes for product photos on a white or plain background. You can also paste an image.',choose:'Choose image(s)',chooseFolder:'Choose folder',sample:'Try a sample',noImage:'No image selected',loading:'Loading image…',dragHint:'Drag orange cut lines to fine-tune panel boundaries.',dragHintBoxes:'Orange boxes show each detected object.',controls:'Controls',modeTitle:'Split mode',modeGrid:'▦ Grid',modeBoxes:'◳ Detect boxes',modeGridHelp:'Cut collages and grids into panels. The same grid is used for every image.',modeBoxesHelp:'Find each separate product or box on a plain background and crop it out. Every image is detected on its own.',presets:'Layout',detectBtn:'Detect grid automatically',autoHelp:'Best for collages with visible white or light gutters between pictures. You can drag every detected cut line afterwards.',customGrid:'Custom grid',rowPattern:'Images per row (e.g. 3,6)',rowHelp:'Each number is the number of panels in that row. Example: 3,6 creates 3 panels across the top and 6 across the bottom.',uniformRows:'Uniform rows',uniformCols:'Uniform columns',applyRows:'Apply row pattern',applyUniform:'Apply uniform',smartCrop:'Crop ratio',tileRatio:'Individual tile ratio',ratioAuto:'Original tile ratio',smartCheck:'Smart focal crop when a ratio is selected',findFocus:'Find important area',detectTitle:'Box detection',tol:'Background tolerance',tolHelp:'Higher ignores more of the background colour. Raise it for JPEG noise or light shadows.',close:'Merge distance (px)',closeHelp:'One box breaks into pieces → increase. Two nearby boxes join → decrease.',minArea:'Min size (% of image)',pad:'Padding (px)',minHelp:'A small box is missed → lower the min size (e.g. 0.4).',soft:'Edge softness (px)',autoBg:"Detect the photo's background colour automatically",bgPick:'Photo background',pickBg:'🎯 Pick from photo',redetect:'↻ Re-detect boxes',boxNote:'Works on plain or white backgrounds. White areas inside a box are kept. Each image in the batch is detected separately.',previewSettings:'Preview settings',showCuts:'Show cut lines / boxes',showNums:'Show slice numbers',sliceOrder:'Slice numbering',orderRead:'Reading order (left to right)',orderReverse:'Instagram posting order (reverse)',output:'Output',format:'Format',quality:'Quality',sizeMode:'Size',sizeOriginal:'Original size',sizeWidth:'Fixed width',sizeFixed:'Fixed canvas W × H',width:'Width (px)',height:'Height (px)',upscale:'Enlarge small slices to fill the canvas',bgMode:'Background',bgOriginal:'Keep original',bgTransparent:'Transparent cut-out',bgColorOpt:'Solid colour cut-out',fill:'Fill colour',bgHelpBoxes:'Cut-out removes the photo background around each box. JPG and BMP cannot be transparent, so white is used.',bgHelpGrid:'Cut-out works in Detect boxes mode. In Grid mode the colour fills empty space on a fixed canvas.',perFolder:'Put each image in its own folder in the ZIP',export:'Download',downloadZip:'Download all · ZIP',downloadPdf:'Export PDF',downloadAll:'Current · ZIP',clear:'Clear all',exportHelp:'Every image in the queue is processed. Folder uploads keep the same sub-folder structure inside the ZIP. Files are named like product_1, product_2.',batch:'Bulk image queue',addMore:'＋ Images',addFolder:'📁 Folder',yourSlices:'Your slices',report:'Batch report',cancel:'Cancel',check:'check',noBoxes:'No boxes found. Lower the min size or tolerance, or pick the background colour.',pickNow:'Click the background of the photo to pick its colour.',footerPrivacy:'Private, browser-based image splitting. Your images are not uploaded.',drop:'Drop images or folders to add them'},
+es:{headline:'Divide cualquier imagen con precisión.',intro:'Corta un collage en cuadrícula o detecta automáticamente cada caja de producto sobre un fondo liso. Procesa carpetas completas y descarga las partes.',trust1:'Gratis, sin marca de agua',trust2:'Tus archivos no salen del dispositivo',trust3:'PNG, JPG, WebP, BMP, ZIP o PDF',trust4:'Carpetas completas, misma estructura',dropTitle:'Suelta imágenes o una carpeta aquí',dropText:'Usa Cuadrícula para collages o Detectar cajas para fotos de producto con fondo blanco o liso. También puedes pegar una imagen.',choose:'Elegir imágenes',chooseFolder:'Elegir carpeta',sample:'Probar ejemplo',noImage:'Ninguna imagen seleccionada',loading:'Cargando imagen…',dragHint:'Arrastra las líneas naranjas para ajustar los cortes.',dragHintBoxes:'Los recuadros naranjas muestran cada objeto detectado.',controls:'Controles',modeTitle:'Modo de corte',modeGrid:'▦ Cuadrícula',modeBoxes:'◳ Detectar cajas',modeGridHelp:'Corta collages en paneles. Se usa la misma cuadrícula en todas las imágenes.',modeBoxesHelp:'Encuentra cada producto o caja sobre un fondo liso y lo recorta. Cada imagen se analiza por separado.',presets:'Diseño',detectBtn:'Detectar cuadrícula',autoHelp:'Ideal para collages con separaciones blancas o claras. Después puedes arrastrar cada línea.',customGrid:'Cuadrícula personalizada',rowPattern:'Imágenes por fila (ej. 3,6)',rowHelp:'Cada número indica los paneles de esa fila. Ejemplo: 3,6 crea 3 arriba y 6 abajo.',uniformRows:'Filas iguales',uniformCols:'Columnas iguales',applyRows:'Aplicar filas',applyUniform:'Aplicar cuadrícula',smartCrop:'Proporción de recorte',tileRatio:'Proporción de cada parte',ratioAuto:'Proporción original',smartCheck:'Encuadre inteligente al elegir proporción',findFocus:'Buscar zona importante',detectTitle:'Detección de cajas',tol:'Tolerancia del fondo',tolHelp:'Más alto ignora más color de fondo. Súbelo con ruido JPEG o sombras suaves.',close:'Distancia de unión (px)',closeHelp:'Una caja se rompe en partes → aumenta. Dos cajas cercanas se unen → reduce.',minArea:'Tamaño mín. (% de imagen)',pad:'Margen (px)',minHelp:'Si falta una caja pequeña, baja el tamaño mínimo (ej. 0.4).',soft:'Suavizado de borde (px)',autoBg:'Detectar el color de fondo automáticamente',bgPick:'Fondo de la foto',pickBg:'🎯 Tomar de la foto',redetect:'↻ Volver a detectar',boxNote:'Funciona con fondos lisos o blancos. Se conservan las zonas blancas dentro de la caja.',previewSettings:'Vista previa',showCuts:'Mostrar líneas / cajas',showNums:'Mostrar números',sliceOrder:'Orden de partes',orderRead:'Orden de lectura',orderReverse:'Orden de Instagram (inverso)',output:'Salida',format:'Formato',quality:'Calidad',sizeMode:'Tamaño',sizeOriginal:'Tamaño original',sizeWidth:'Ancho fijo',sizeFixed:'Lienzo fijo An × Al',width:'Ancho (px)',height:'Alto (px)',upscale:'Ampliar partes pequeñas para llenar el lienzo',bgMode:'Fondo',bgOriginal:'Mantener original',bgTransparent:'Recorte transparente',bgColorOpt:'Recorte con color sólido',fill:'Color de relleno',bgHelpBoxes:'El recorte elimina el fondo alrededor de cada caja. JPG y BMP no admiten transparencia, se usa blanco.',bgHelpGrid:'El recorte funciona en Detectar cajas. En Cuadrícula el color rellena el lienzo fijo.',perFolder:'Una carpeta por imagen en el ZIP',export:'Descargar',downloadZip:'Descargar todo · ZIP',downloadPdf:'Exportar PDF',downloadAll:'Actual · ZIP',clear:'Quitar todo',exportHelp:'Se procesan todas las imágenes. Las carpetas mantienen su estructura dentro del ZIP. Nombres como producto_1, producto_2.',batch:'Cola de imágenes',addMore:'＋ Imágenes',addFolder:'📁 Carpeta',yourSlices:'Tus partes',report:'Informe del lote',cancel:'Cancelar',check:'revisar',noBoxes:'No se encontraron cajas. Baja el tamaño mínimo o la tolerancia, o elige el color de fondo.',pickNow:'Haz clic en el fondo de la foto para tomar su color.',footerPrivacy:'División privada en el navegador. Las imágenes no se suben.',drop:'Suelta imágenes o carpetas'},
+ur:{headline:'تصویر کو حصوں میں تقسیم کریں۔',intro:'کولاج کو گرڈ میں کاٹیں یا سادہ بیک گراؤنڈ پر ہر پروڈکٹ باکس خودکار طور پر تلاش کریں۔ پورے فولڈر ایک ساتھ پروسیس کریں۔',trust1:'مفت، کوئی واٹر مارک نہیں',trust2:'فائلیں آپ کی ڈیوائس پر رہتی ہیں',trust3:'PNG، JPG، WebP، BMP، ZIP یا PDF',trust4:'پورے فولڈر، وہی اسٹرکچر',dropTitle:'تصاویر یا پورا فولڈر یہاں ڈراپ کریں',dropText:'کولاج کے لیے گرڈ، اور سفید یا سادہ بیک گراؤنڈ والی پروڈکٹ تصاویر کے لیے باکس ڈیٹیکٹ استعمال کریں۔',choose:'تصاویر منتخب کریں',chooseFolder:'فولڈر منتخب کریں',sample:'نمونہ دیکھیں',noImage:'کوئی تصویر منتخب نہیں',loading:'تصویر لوڈ ہو رہی ہے…',dragHint:'نارنجی لائنز کھینچ کر کٹ کی جگہ درست کریں۔',dragHintBoxes:'نارنجی باکس ہر ملنے والی چیز دکھاتے ہیں۔',controls:'کنٹرولز',modeTitle:'تقسیم کا طریقہ',modeGrid:'▦ گرڈ',modeBoxes:'◳ باکس ڈیٹیکٹ',modeGridHelp:'کولاج اور گرڈ کو پینلز میں کاٹیں۔ ہر تصویر پر ایک ہی گرڈ لگے گا۔',modeBoxesHelp:'سادہ بیک گراؤنڈ پر ہر الگ پروڈکٹ یا باکس تلاش کر کے کاٹیں۔ ہر تصویر الگ سے ڈیٹیکٹ ہوتی ہے۔',presets:'لے آؤٹ',detectBtn:'گرڈ خودکار شناخت کریں',autoHelp:'سفید یا ہلکی لائنوں والے گرڈ کے لیے بہتر ہے۔ بعد میں ہر لائن کو کھینچ کر درست کیا جا سکتا ہے۔',customGrid:'کسٹم گرڈ',rowPattern:'ہر قطار میں تصاویر (مثلاً 3,6)',rowHelp:'ہر نمبر اس قطار کے پینلز کی تعداد ہے۔ 3,6 سے اوپر 3 اور نیچے 6 پینل بنیں گے۔',uniformRows:'برابر قطاریں',uniformCols:'برابر کالم',applyRows:'قطاریں لاگو کریں',applyUniform:'برابر گرڈ لگائیں',smartCrop:'کراپ تناسب',tileRatio:'ہر حصے کا تناسب',ratioAuto:'اصل تناسب',smartCheck:'منتخب تناسب پر اسمارٹ فوکل کراپ',findFocus:'اہم جگہ تلاش کریں',detectTitle:'باکس ڈیٹیکشن',tol:'بیک گراؤنڈ ٹالرینس',tolHelp:'زیادہ کرنے سے بیک گراؤنڈ کا رنگ زیادہ نظرانداز ہوگا۔ JPEG شور یا ہلکے سائے میں بڑھائیں۔',close:'جوڑنے کا فاصلہ (px)',closeHelp:'ایک باکس ٹکڑوں میں ٹوٹے → بڑھائیں۔ دو پاس پاس باکس جڑ جائیں → کم کریں۔',minArea:'کم از کم سائز (% تصویر)',pad:'پیڈنگ (px)',minHelp:'چھوٹا باکس رہ جائے تو کم از کم سائز کم کریں (مثلاً 0.4)۔',soft:'کنارے کی نرمی (px)',autoBg:'تصویر کا بیک گراؤنڈ رنگ خودکار معلوم کریں',bgPick:'تصویر کا بیک گراؤنڈ',pickBg:'🎯 تصویر سے چنیں',redetect:'↻ دوبارہ ڈیٹیکٹ',boxNote:'سادہ یا سفید بیک گراؤنڈ پر کام کرتا ہے۔ باکس کے اندر کا سفید حصہ محفوظ رہتا ہے۔',previewSettings:'پری ویو سیٹنگز',showCuts:'کٹ لائنز / باکس دکھائیں',showNums:'نمبر دکھائیں',sliceOrder:'حصوں کی ترتیب',orderRead:'پڑھنے کی ترتیب',orderReverse:'انسٹاگرام ترتیب (الٹی)',output:'آؤٹ پٹ',format:'فارمیٹ',quality:'کوالٹی',sizeMode:'سائز',sizeOriginal:'اصل سائز',sizeWidth:'مقررہ چوڑائی',sizeFixed:'مقررہ کینوس W × H',width:'چوڑائی (px)',height:'اونچائی (px)',upscale:'چھوٹے حصوں کو بڑا کر کے کینوس بھریں',bgMode:'بیک گراؤنڈ',bgOriginal:'اصل رکھیں',bgTransparent:'شفاف کٹ آؤٹ',bgColorOpt:'ٹھوس رنگ کٹ آؤٹ',fill:'بھرنے کا رنگ',bgHelpBoxes:'کٹ آؤٹ ہر باکس کے گرد بیک گراؤنڈ ہٹا دیتا ہے۔ JPG اور BMP شفاف نہیں ہو سکتے، اس لیے سفید استعمال ہوگا۔',bgHelpGrid:'کٹ آؤٹ باکس ڈیٹیکٹ موڈ میں کام کرتا ہے۔ گرڈ میں یہ رنگ مقررہ کینوس کی خالی جگہ بھرتا ہے۔',perFolder:'ZIP میں ہر تصویر کا الگ فولڈر',export:'ڈاؤن لوڈ',downloadZip:'سب ڈاؤن لوڈ · ZIP',downloadPdf:'PDF بنائیں',downloadAll:'موجودہ · ZIP',clear:'سب ہٹائیں',exportHelp:'قطار کی ہر تصویر پروسیس ہوگی۔ فولڈر کا اسٹرکچر ZIP میں وہی رہے گا۔ نام product_1، product_2 جیسے ہوں گے۔',batch:'بلک امیج قطار',addMore:'＋ تصاویر',addFolder:'📁 فولڈر',yourSlices:'آپ کے حصے',report:'بیچ رپورٹ',cancel:'منسوخ',check:'چیک کریں',noBoxes:'کوئی باکس نہیں ملا۔ کم از کم سائز یا ٹالرینس کم کریں، یا بیک گراؤنڈ رنگ چنیں۔',pickNow:'رنگ چننے کے لیے تصویر کے بیک گراؤنڈ پر کلک کریں۔',footerPrivacy:'تصاویر براؤزر میں ہی پروسیس ہوتی ہیں، اپ لوڈ نہیں ہوتیں۔',drop:'تصاویر یا فولڈر ڈراپ کریں'}
+};
+let lang='en';
+const t=k=>(I18N[lang]&&I18N[lang][k])||I18N.en[k]||k;
+
+/* ---------------- Helpers & state ---------------- */
+const clone=o=>JSON.parse(JSON.stringify(o));
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const tick=()=>new Promise(r=>setTimeout(r,0));
+const mk=(w,h)=>{const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c};
+const natW=f=>f.img.naturalWidth||f.img.width,natH=f=>f.img.naturalHeight||f.img.height;
+const eq=n=>Array.from({length:n+1},(_,i)=>i/n);
+const DEFAULTS={mode:'grid',rows:[3,3,3],rowCuts:eq(3),colCuts:[eq(3),eq(3),eq(3)],ratio:'auto',smart:true,showCuts:true,showNums:true,order:'read',
+ format:'image/png',quality:95,maxKB:0,sizeMode:'original',outWidth:1080,outW:1080,outH:1080,upscale:false,bgMode:'original',fill:'#ffffff',perFolder:false,
+ box:{tol:32,close:20,minArea:0.8,pad:10,soft:1,autoBg:true,bgColor:'#ffffff'}};
+const KEY='slicemat-settings-v4';
+function validGrid(s){return Array.isArray(s.rows)&&s.rows.length>0&&Array.isArray(s.rowCuts)&&s.rowCuts.length===s.rows.length+1&&Array.isArray(s.colCuts)&&s.colCuts.length===s.rows.length&&s.colCuts.every((c,i)=>Array.isArray(c)&&c.length===s.rows[i]+1)}
+let S=clone(DEFAULTS);
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved==='object'){S={...S,...saved,box:{...DEFAULTS.box,...(saved.box||{})}};if(!validGrid(S)){S.rows=clone(DEFAULTS.rows);S.rowCuts=clone(DEFAULTS.rowCuts);S.colCuts=clone(DEFAULTS.colCuts)}}}catch(e){}
+let files=[],active=0,history=[],future=[],drag=null,toastTimer=0,installPrompt=null,cancelFlag=false,saveTimer=0,sliceTimer=0,sliceToken=0,webpWarned=false,picking=false,busy=false;
+const activeFile=()=>files[active]||null;
+const alphaFormat=()=>S.format==='image/png'||S.format==='image/webp';
+
+function saveSettings(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},300)}
+function pushHistory(){history.push(clone(S));if(history.length>50)history.shift();future=[];syncHistory()}
+function syncHistory(){$('undo').disabled=!history.length;$('redo').disabled=!future.length}
+function undo(){if(!history.length)return;future.push(clone(S));S=history.pop();syncControls();refresh();syncHistory()}
+function redo(){if(!future.length)return;history.push(clone(S));S=future.pop();syncControls();refresh();syncHistory()}
+function change(fn){pushHistory();fn();syncControls();refresh()}
+function refresh(save=true){render();scheduleSlices();if(save)saveSettings()}
+function setKey(path,v){const [a,b]=path.split('.');if(b)S[a][b]=v;else S[a]=v}
+function notify(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const rgbHex=c=>'#'+c.map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');
+const hexRgb=h=>{const m=/^#?([0-9a-f]{6})$/i.exec(h||'');const n=m?parseInt(m[1],16):0xffffff;return[(n>>16)&255,(n>>8)&255,n&255]};
+const stemOf=f=>(f.name.replace(/\.[^.]+$/,'').replace(/[\\/:*?"<>|\x00-\x1f]+/g,'-').trim()||'image');
+const cleanDir=d=>d.split('/').map(s=>s.replace(/[\\:*?"<>|\x00-\x1f]+/g,'-').trim()).filter(s=>s&&s!=='.'&&s!=='..').join('/');
+const pathOf=f=>(f.rel?f.rel+'/':'')+f.name;
+
+/* ---------------- Grid layout ---------------- */
+function cells(){const out=[];for(let r=0;r<S.rows.length;r++){const y0=S.rowCuts[r],y1=S.rowCuts[r+1],cuts=S.colCuts[r]||[0,1];for(let c=0;c<cuts.length-1;c++)out.push({r,c,x0:cuts[c],x1:cuts[c+1],y0,y1})}return out}
+const currentOrder=list=>S.order==='reverse'?[...list].reverse():list;
+function setLayout(rows,extra){rows=rows.map(n=>clamp(Math.round(+n||1),1,20));if(!rows.length||rows.reduce((a,b)=>a+b,0)>160){notify('Use 1–20 panels per row and no more than 160 panels total.');return}change(()=>{S.mode='grid';S.rows=rows;S.rowCuts=eq(rows.length);S.colCuts=rows.map(n=>eq(n));if(extra)extra()})}
+function setUniform(r,c){r=clamp(+r||1,1,20);c=clamp(+c||1,1,20);setLayout(Array(r).fill(c))}
+
+/* ---------------- UI sync ---------------- */
+function translate(l){lang=I18N[l]?l:'en';document.documentElement.lang=lang;document.documentElement.dir=lang==='ur'?'rtl':'ltr';document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});$('stage').dataset.drop=t('drop');$('language').value=lang;try{localStorage.setItem('slicemat-lang',lang)}catch(e){}syncControls();render()}
+function syncControls(){
+ document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===S.mode));
+ document.querySelectorAll('.gridOnly').forEach(el=>el.hidden=S.mode!=='grid');
+ document.querySelectorAll('.boxOnly').forEach(el=>el.hidden=S.mode!=='boxes');
+ $('modeHelp').textContent=t(S.mode==='grid'?'modeGridHelp':'modeBoxesHelp');
+ $('dragHint').textContent=t(S.mode==='grid'?'dragHint':'dragHintBoxes');
+ $('bgHelp').textContent=t(S.mode==='grid'?'bgHelpGrid':'bgHelpBoxes');
+ $('rowPattern').value=S.rows.join(',');$('ratio').value=S.ratio;$('smart').checked=S.smart;
+ $('showCuts').checked=S.showCuts;$('showNums').checked=S.showNums;$('order').value=S.order;
+ $('format').value=S.format;$('quality').value=S.quality;$('qualityVal').textContent=S.quality+'%';$('quality').disabled=S.format==='image/png'||S.format==='image/bmp';
+ $('sizeMode').value=S.sizeMode;$('widthField').hidden=S.sizeMode!=='width';$('fixedFields').hidden=S.sizeMode!=='fixed';$('upscaleRow').hidden=S.sizeMode!=='fixed';
+ $('outWidth').value=S.outWidth;$('outW').value=S.outW;$('outH').value=S.outH;$('upscale').checked=S.upscale;
+ $('bgMode').value=S.bgMode;$('fill').value=S.fill;$('fillField').hidden=S.bgMode==='transparent';$('perFolder').checked=S.perFolder;
+ const b=S.box;$('tol').value=b.tol;$('tolVal').textContent=b.tol;$('close').value=b.close;$('closeVal').textContent=b.close;$('soft').value=b.soft;$('softVal').textContent=b.soft;
+ $('minArea').value=b.minArea;$('pad').value=b.pad;$('autoBg').checked=b.autoBg;$('bgColor').value=b.bgColor;$('bgColor').disabled=b.autoBg;
+ $('stage').classList.toggle('picking',picking);$('pickBg').classList.toggle('on',picking);
+}
+function updateCount(){$('batchCount').textContent=`${files.length} file${files.length===1?'':'s'}`}
+
+/* ---------------- Preview rendering ---------------- */
+let view={w:0,h:0};
+function badge(x,y,n){ctx.fillStyle='#14243be8';ctx.beginPath();ctx.arc(x,y,13,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.setLineDash([]);ctx.stroke();ctx.fillStyle='#fff';ctx.font='700 11px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(n),x,y)}
+function drawGrid(w,h){if(!S.showCuts)return;ctx.save();ctx.strokeStyle='#ff5a36';ctx.lineWidth=2;ctx.setLineDash([7,5]);
+ for(let r=0;r<S.rows.length;r++){const y0=S.rowCuts[r]*h,y1=S.rowCuts[r+1]*h,cuts=S.colCuts[r];for(let c=1;c<cuts.length-1;c++){const x=cuts[c]*w;ctx.beginPath();ctx.moveTo(x,y0);ctx.lineTo(x,y1);ctx.stroke()}}
+ for(let r=1;r<S.rowCuts.length-1;r++){const y=S.rowCuts[r]*h;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+ if(S.showNums)currentOrder(cells()).forEach((cell,i)=>badge(cell.x0*w+18,cell.y0*h+18,i+1));ctx.restore()}
+function drawBoxes(det,kx,ky){if(!S.showCuts)return;ctx.save();const p=S.box.pad;
+ currentOrder(det.rects).forEach((r,i)=>{const x=Math.max(0,r.x-p)*kx,y=Math.max(0,r.y-p)*ky,w=(Math.min(det.W,r.x+r.w+p)*kx)-x,h=(Math.min(det.H,r.y+r.h+p)*ky)-y;
+  ctx.fillStyle='rgba(255,90,54,.08)';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#ff5a36';ctx.lineWidth=2;ctx.setLineDash([7,5]);ctx.strokeRect(x+1,y+1,w-2,h-2);if(S.showNums)badge(x+16,y+16,i+1)});ctx.restore()}
+function render(){
+ const f=activeFile(),stage=$('stage');
+ if(!f){stage.classList.add('empty');$('dropzone').classList.remove('hidden');canvas.classList.add('hidden');$('imageinfo').textContent=t('noImage');$('results').classList.add('hidden');$('sliceList').innerHTML='';$('boxStatus').classList.remove('show');updateCount();return}
+ stage.classList.remove('empty');$('dropzone').classList.add('hidden');
+ if(!f.img){$('imageinfo').textContent=t('loading');ensureImg(f).then(()=>{renderQueue();if(activeFile()===f)refresh(false)}).catch(e=>notify(e.message));return}
+ canvas.classList.remove('hidden');
+ const iw=natW(f),ih=natH(f),maxW=Math.max(240,stage.clientWidth-46),maxH=Math.max(220,Math.min(innerHeight*.66,690));
+ const scale=Math.min(maxW/iw,maxH/ih),w=Math.max(1,Math.round(iw*scale)),h=Math.max(1,Math.round(ih*scale)),d=window.devicePixelRatio||1;
+ canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);canvas.style.width=w+'px';canvas.style.height=h+'px';
+ ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);ctx.imageSmoothingQuality='high';ctx.drawImage(f.img,0,0,w,h);view={w,h};
+ let info;
+ if(S.mode==='grid'){drawGrid(w,h);info=`${f.name} · ${iw} × ${ih} px · ${S.rows.length} rows · ${cells().length} slices`;$('uniformRows').value=S.rows.length;$('uniformCols').value=S.rows.every(n=>n===S.rows[0])?S.rows[0]:''}
+ else{let det;try{det=getDet(f)}catch(e){console.error(e);det={rects:[],bg:[255,255,255],W:iw,H:ih};notify('Detection failed: '+e.message)}
+  drawBoxes(det,w/iw,h/ih);const hex=rgbHex(det.bg),st=$('boxStatus');st.classList.add('show');st.classList.toggle('bad',!det.rects.length);
+  st.innerHTML=det.rects.length?`✓ ${det.rects.length} box${det.rects.length===1?'':'es'} · background <span class="swatch" style="background:${hex}"></span>${hex}`:escapeHtml(t('noBoxes'));
+  info=`${f.name} · ${iw} × ${ih} px · ${det.rects.length} boxes`}
+ $('imageinfo').textContent=info;updateCount();
+}
+
+/* ---------------- Box detection (classic CV, runs in browser) ---------------- */
+function getDet(f){const sig=JSON.stringify(S.box);if(f.det&&f.det.sig===sig)return f.det;f.det=detectBoxes(f);f.det.sig=sig;return f.det}
+function floodBorder(cand,w,h){const N=w*h,vis=new Uint8Array(N),q=new Int32Array(N);let head=0,tail=0;const push=i=>{if(cand[i]&&!vis[i]){vis[i]=1;q[tail++]=i}};
+ for(let x=0;x<w;x++){push(x);push((h-1)*w+x)}for(let y=0;y<h;y++){push(y*w);push(y*w+w-1)}
+ while(head<tail){const i=q[head++],x=i%w;if(x>0)push(i-1);if(x<w-1)push(i+1);if(i>=w)push(i-w);if(i<N-w)push(i+w)}return vis}
+function distTo(mask,w,h,target){const N=w*h,D=new Float32Array(N),a=1,b=Math.SQRT2;for(let i=0;i<N;i++)D[i]=mask[i]===target?0:1e9;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x;let v=D[i];if(!v)continue;if(x>0)v=Math.min(v,D[i-1]+a);if(y>0){v=Math.min(v,D[i-w]+a);if(x>0)v=Math.min(v,D[i-w-1]+b);if(x<w-1)v=Math.min(v,D[i-w+1]+b)}D[i]=v}
+ for(let y=h-1;y>=0;y--)for(let x=w-1;x>=0;x--){const i=y*w+x;let v=D[i];if(!v)continue;if(x<w-1)v=Math.min(v,D[i+1]+a);if(y<h-1){v=Math.min(v,D[i+w]+a);if(x<w-1)v=Math.min(v,D[i+w+1]+b);if(x>0)v=Math.min(v,D[i+w-1]+b)}D[i]=v}return D}
+const median=a=>{if(!a.length)return 255;a.sort((x,y)=>x-y);return a[a.length>>1]};
+function detectBoxes(f){
+ const W=natW(f),H=natH(f),s=Math.min(1,1000/Math.max(W,H)),w=Math.max(2,Math.round(W*s)),h=Math.max(2,Math.round(H*s)),N=w*h;
+ const c=mk(w,h),g=c.getContext('2d',{willReadFrequently:true});g.drawImage(f.img,0,0,w,h);const d=g.getImageData(0,0,w,h).data;
+ let bg;
+ if(S.box.autoBg){const R=[],G=[],B=[];const take=i=>{if(d[i*4+3]<128)return;R.push(d[i*4]);G.push(d[i*4+1]);B.push(d[i*4+2])};
+  for(let x=0;x<w;x++){take(x);take(w+x);take((h-1)*w+x);take((h-2)*w+x)}for(let y=0;y<h;y++){take(y*w);take(y*w+1);take(y*w+w-1);take(y*w+w-2)}bg=[median(R),median(G),median(B)]}
+ else bg=hexRgb(S.box.bgColor);
+ const tol2=S.box.tol*S.box.tol,cand=new Uint8Array(N);
+ for(let i=0;i<N;i++){const p=i*4;if(d[p+3]<40){cand[i]=1;continue}const dr=d[p]-bg[0],dg=d[p+1]-bg[1],db=d[p+2]-bg[2];if(dr*dr+dg*dg+db*db<=tol2)cand[i]=1}
+ const outside=floodBorder(cand,w,h);let fg=new Uint8Array(N);for(let i=0;i<N;i++)fg[i]=outside[i]?0:1;
+ const r=(S.box.close/2)*s;
+ if(r>=.5){const d1=distTo(fg,w,h,1);for(let i=0;i<N;i++)fg[i]=d1[i]<=r?1:0;const d2=distTo(fg,w,h,0);for(let i=0;i<N;i++)if(d2[i]<=r)fg[i]=0}
+ const notFg=new Uint8Array(N);for(let i=0;i<N;i++)notFg[i]=fg[i]?0:1;
+ const out2=floodBorder(notFg,w,h),solid=new Uint8Array(N);for(let i=0;i<N;i++)solid[i]=out2[i]?0:1; // holes filled (white inside a box stays)
+ const lab=new Int32Array(N),stack=new Int32Array(N),comps=[];let L=0;
+ for(let i=0;i<N;i++){if(!solid[i]||lab[i])continue;L++;let sp=0,area=0,minx=w,miny=h,maxx=0,maxy=0;stack[sp++]=i;lab[i]=L;
+  while(sp){const p=stack[--sp],x=p%w,y=(p/w)|0;area++;if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;
+   for(let dy=-1;dy<=1;dy++){const ny=y+dy;if(ny<0||ny>=h)continue;for(let dx=-1;dx<=1;dx++){const nx=x+dx;if(nx<0||nx>=w)continue;const q=ny*w+nx;if(solid[q]&&!lab[q]){lab[q]=L;stack[sp++]=q}}}}
+  comps.push({L,area,minx,miny,maxx,maxy})}
+ const minA=(S.box.minArea/100)*N,rects=[];
+ for(const cp of comps){if(cp.area<minA)continue;const mw=cp.maxx-cp.minx+1,mh=cp.maxy-cp.miny+1,m=mk(mw,mh),mg=m.getContext('2d'),id=mg.createImageData(mw,mh);
+  for(let y=0;y<mh;y++){const row=(y+cp.miny)*w;for(let x=0;x<mw;x++)if(lab[row+x+cp.minx]===cp.L)id.data[(y*mw+x)*4+3]=255}mg.putImageData(id,0,0);
+  const x0=Math.floor(cp.minx/s),y0=Math.floor(cp.miny/s),x1=Math.min(W,Math.ceil((cp.maxx+1)/s)),y1=Math.min(H,Math.ceil((cp.maxy+1)/s));
+  rects.push({x:x0,y:y0,w:x1-x0,h:y1-y0,mx:cp.minx,my:cp.miny,mask:m})}
+ const band=Math.max(1,Math.floor(.15*H));rects.sort((a,b)=>(Math.floor(a.y/band)-Math.floor(b.y/band))||(a.x-b.x));
+ return{rects,bg,s,W,H}}
+
+/* ---------------- Grid gutter detection & focal crop ---------------- */
+function findBrightGutters(file,axis,startFrac=0,endFrac=1){const iw=natW(file),ih=natH(file),max=700,scale=Math.min(1,max/Math.max(iw,ih));const w=Math.max(2,Math.round(iw*scale)),h=Math.max(2,Math.round(ih*scale)),c=mk(w,h),g=c.getContext('2d',{willReadFrequently:true});g.drawImage(file.img,0,0,w,h);const data=g.getImageData(0,0,w,h).data;const dim=axis==='x'?w:h,other=axis==='x'?h:w,lo=Math.floor(startFrac*other),hi=Math.max(lo+1,Math.floor(endFrac*other));const score=[];
+ for(let p=0;p<dim;p++){let light=0,neutral=0,sum=0,sum2=0,count=0;for(let q=lo;q<hi;q+=Math.max(1,Math.floor((hi-lo)/240))){const x=axis==='x'?p:q,y=axis==='x'?q:p,i=(y*w+x)*4,r=data[i],gg=data[i+1],b=data[i+2],lum=(r+gg+b)/3;sum+=lum;sum2+=lum*lum;count++;if(lum>238)light++;if(Math.max(r,gg,b)-Math.min(r,gg,b)<24&&lum>225)neutral++}const mean=sum/count,variance=Math.max(0,sum2/count-mean*mean);score.push((light/count)*.65+(neutral/count)*.25+(1-Math.min(1,variance/1800))*.1)}
+ const threshold=.86,valid=score.map(v=>v>=threshold);let runs=[],i=0;while(i<dim){if(!valid[i]){i++;continue}let j=i;while(j<dim&&valid[j])j++;const len=j-i;if(i>dim*.03&&j<dim*.97&&len>=Math.max(1,dim*.0015)&&len<=dim*.035)runs.push({a:i,b:j,mid:(i+j)/2,score:score.slice(i,j).reduce((a,b)=>a+b,0)/len});i=j}
+ const minGap=dim*.035,selected=[];for(const run of runs.sort((a,b)=>b.score-a.score)){if(selected.every(v=>Math.abs(v.mid-run.mid)>minGap))selected.push(run)}return selected.sort((a,b)=>a.mid-b.mid).map(v=>v.mid/dim)}
+async function autoDetect(){const f=activeFile();if(!f){notify('Choose an image first.');return}const btn=$('autodetect');btn.disabled=true;btn.textContent='Scanning image…';
+ try{await ensureImg(f);await tick();const ys=findBrightGutters(f,'y').slice(0,10),rowCuts=[0,...ys,1],rows=[],cols=[];
+  for(let r=0;r<rowCuts.length-1;r++){const xs=findBrightGutters(f,'x',rowCuts[r]+.006,rowCuts[r+1]-.006).slice(0,19),cuts=[0,...xs,1];rows.push(cuts.length-1);cols.push(cuts)}
+  const found=rows.reduce((a,b)=>a+b,0);
+  if(found>160){notify('Too many separators were detected. Try fewer rows or edit manually.');return}
+  if(found<=1){notify('No clear grid gutters found. Enter a row pattern such as 3,6, or try Detect boxes mode.');$('autostatus').textContent='No confident separators found — use Custom grid or Detect boxes.';$('autostatus').classList.add('show');return}
+  change(()=>{S.mode='grid';S.rows=rows;S.rowCuts=rowCuts;S.colCuts=cols});
+  $('autostatus').textContent=`Detected ${rows.length} rows and ${found} panels (${rows.join(' + ')}). Check the orange lines and adjust if needed.`;$('autostatus').classList.add('show');notify(`Detected ${found} panels in ${rows.length} rows.`)}
+ catch(err){console.error(err);notify('Auto-detection could not read this image. Use the custom grid controls.')}
+ finally{btn.disabled=false;btn.innerHTML=`✦ <span data-i18n="detectBtn">${t('detectBtn')}</span>`}}
+function estimateCellFocus(img,rect){const size=72,c=mk(size,size),g=c.getContext('2d',{willReadFrequently:true});g.drawImage(img,rect.x,rect.y,rect.w,rect.h,0,0,size,size);const d=g.getImageData(0,0,size,size).data;let sx=0,sy=0,sw=0;
+ for(let y=1;y<size-1;y++)for(let x=1;x<size-1;x++){const i=(y*size+x)*4,lum=(d[i]+d[i+1]+d[i+2])/3,ir=i+4,ib=i+size*4,dx=Math.abs(lum-(d[ir]+d[ir+1]+d[ir+2])/3),dy=Math.abs(lum-(d[ib]+d[ib+1]+d[ib+2])/3),sat=Math.max(d[i],d[i+1],d[i+2])-Math.min(d[i],d[i+1],d[i+2]),weight=(dx+dy)*.7+sat*.3+1,center=1-Math.min(1,Math.hypot((x/size-.5)*1.25,(y/size-.5)*1.25)),v=weight*center;sx+=(x/size)*v;sy+=(y/size)*v;sw+=v}
+ return sw?{x:clamp(sx/sw,.15,.85),y:clamp(sy/sw,.15,.85)}:{x:.5,y:.5}}
+function focalCrop(rect,img){let{x,y,w,h}=rect;const ratio={'1:1':1,'4:5':4/5,'3:4':3/4,'2:3':2/3,'16:9':16/9,'9:16':9/16}[S.ratio];if(!ratio)return{x,y,w,h};let nw=w,nh=h;if(w/h>ratio)nw=h*ratio;else nh=w/ratio;const focus=S.smart?estimateCellFocus(img,rect):{x:.5,y:.5};x+=clamp(focus.x,0,1)*(w-nw);y+=clamp(focus.y,0,1)*(h-nh);return{x,y,w:nw,h:nh}}
+
+/* ---------------- Tile generation ---------------- */
+function drawScaled(g,src,dx,dy,dw,dh){let cur=src;while(cur.width/2>=dw&&cur.height/2>=dh&&cur.width>2&&cur.height>2){const n=mk(Math.ceil(cur.width/2),Math.ceil(cur.height/2)),ng=n.getContext('2d');ng.imageSmoothingQuality='high';ng.drawImage(cur,0,0,n.width,n.height);cur=n}g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(cur,dx,dy,dw,dh)}
+function finalize(src){
+ const alphaOK=alphaFormat(),transparent=S.bgMode==='transparent'&&alphaOK,fill=S.bgMode==='transparent'?'#ffffff':S.fill;
+ let W=src.width,H=src.height,dx=0,dy=0,dw=W,dh=H;
+ if(S.sizeMode==='width'){W=clamp(Math.round(+S.outWidth||1080),16,10000);H=Math.max(1,Math.round(W*src.height/src.width));dw=W;dh=H}
+ else if(S.sizeMode==='fixed'){W=clamp(Math.round(+S.outW||1080),16,10000);H=clamp(Math.round(+S.outH||1080),16,10000);let k=Math.min(W/src.width,H/src.height);if(!S.upscale)k=Math.min(1,k);dw=Math.max(1,Math.round(src.width*k));dh=Math.max(1,Math.round(src.height*k));dx=Math.floor((W-dw)/2);dy=Math.floor((H-dh)/2)}
+ const needFill=!transparent&&(S.bgMode==='color'||!alphaOK||S.sizeMode==='fixed');
+ if(W===src.width&&H===src.height&&!needFill)return src;
+ const out=mk(W,H),g=out.getContext('2d');if(needFill){g.fillStyle=fill;g.fillRect(0,0,W,H)}drawScaled(g,src,dx,dy,dw,dh);return out}
+function gridTile(f,cell){const iw=natW(f),ih=natH(f);let rect={x:cell.x0*iw,y:cell.y0*ih,w:(cell.x1-cell.x0)*iw,h:(cell.y1-cell.y0)*ih};rect=focalCrop(rect,f.img);const c=mk(rect.w,rect.h),g=c.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(f.img,rect.x,rect.y,rect.w,rect.h,0,0,c.width,c.height);return finalize(c)}
+function boxTile(f,det,r){const iw=natW(f),ih=natH(f),p=Math.max(0,Math.round(+S.box.pad||0));const x1=Math.max(0,r.x-p),y1=Math.max(0,r.y-p),x2=Math.min(iw,r.x+r.w+p),y2=Math.min(ih,r.y+r.h+p),cw=x2-x1,ch=y2-y1;
+ const c=mk(cw,ch),g=c.getContext('2d');
+ if(S.bgMode!=='original'){g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';if(S.box.soft>0&&'filter' in g)g.filter=`blur(${S.box.soft}px)`;g.drawImage(r.mask,r.mx/det.s-x1,r.my/det.s-y1,r.mask.width/det.s,r.mask.height/det.s);g.filter='none';g.globalCompositeOperation='source-in'}
+ g.drawImage(f.img,x1,y1,cw,ch,0,0,cw,ch);g.globalCompositeOperation='source-over';return finalize(c)}
+function tilesFor(f){if(S.mode==='boxes'){const det=getDet(f);return currentOrder(det.rects).map(r=>()=>boxTile(f,det,r))}return currentOrder(cells()).map(cell=>()=>gridTile(f,cell))}
+
+/* ---------------- Encoding: PNG / JPG / WebP / BMP ---------------- */
+function bmpBlob(c){const w=c.width,h=c.height,d=c.getContext('2d').getImageData(0,0,w,h).data,row=(w*3+3)&~3,size=54+row*h,buf=new ArrayBuffer(size),v=new DataView(buf),u=new Uint8Array(buf);
+ v.setUint8(0,0x42);v.setUint8(1,0x4D);v.setUint32(2,size,true);v.setUint32(10,54,true);v.setUint32(14,40,true);v.setInt32(18,w,true);v.setInt32(22,h,true);v.setUint16(26,1,true);v.setUint16(28,24,true);v.setUint32(34,row*h,true);v.setInt32(38,2835,true);v.setInt32(42,2835,true);
+ for(let y=0;y<h;y++){let o=54+(h-1-y)*row;for(let x=0;x<w;x++){const i=(y*w+x)*4,a=d[i+3]/255,k=255*(1-a);u[o++]=d[i+2]*a+k;u[o++]=d[i+1]*a+k;u[o++]=d[i]*a+k}}
+ return new Blob([buf],{type:'image/bmp'})}
+async function encode(c){
+  if(S.format==='image/bmp')return{blob:bmpBlob(c),ext:'bmp'};
+  const type=S.format,q=type==='image/png'?undefined:clamp(S.quality,1,100)/100;
+  const toB=(cv,qq)=>new Promise((res,rej)=>cv.toBlob(b=>b?res(b):rej(new Error('Could not render this slice (image may be too large).')),type,qq));
+  let blob=await toB(c,q);
+  if(blob.type!==type&&!webpWarned){webpWarned=true;notify('This browser cannot save WebP, so PNG was used instead.')}
+  const ext=()=>({'image/png':'png','image/jpeg':'jpg','image/webp':'webp'}[blob.type]||'png');
+  if(S.maxKB>0&&type!=='image/png'&&blob.type===type&&blob.size>S.maxKB*1024){
+    const target=S.maxKB*1024,fit=async cv=>{let lo=.3,hi=q,best=null;for(let i=0;i<7;i++){const m=(lo+hi)/2,b=await toB(cv,m);if(b.size<=target){best=b;lo=m}else hi=m}return best};
+    let best=await fit(c),sc=Math.min(.95,Math.sqrt(target/(blob.size*.5))),last=c;
+    while(!best&&sc>.08){const w=Math.max(1,Math.round(c.width*sc)),h=Math.max(1,Math.round(c.height*sc)),t=document.createElement('canvas');t.width=w;t.height=h;const g=t.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(c,0,0,w,h);last=t;best=await fit(t);sc*=.88}
+    blob=best||await toB(last,.3);
+  }
+  return{blob,ext:ext()}}
+
+function downloadBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000)}
+
+/* ---------------- ZIP (store) ---------------- */
+const CRC_TABLE=(()=>{const tb=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?0xEDB88320^(c>>>1):c>>>1;tb[n]=c>>>0}return tb})();
+function crc32(data){let c=-1;for(let i=0;i<data.length;i++)c=CRC_TABLE[(c^data[i])&255]^(c>>>8);return(c^-1)>>>0}
+function zipBlob(list){const enc=new TextEncoder(),parts=[],central=[],now=new Date();let offset=0;
+ const time=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1),date=((Math.max(1980,now.getFullYear())-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
+ for(const file of list){const name=enc.encode(file.name),data=file.data,crc=crc32(data),h=new DataView(new ArrayBuffer(30));
+  h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x800,true);h.setUint16(8,0,true);h.setUint16(10,time,true);h.setUint16(12,date,true);h.setUint32(14,crc,true);h.setUint32(18,data.length,true);h.setUint32(22,data.length,true);h.setUint16(26,name.length,true);
+  parts.push(new Uint8Array(h.buffer),name,data);
+  const d=new DataView(new ArrayBuffer(46));d.setUint32(0,0x02014b50,true);d.setUint16(4,20,true);d.setUint16(6,20,true);d.setUint16(8,0x800,true);d.setUint16(10,0,true);d.setUint16(12,time,true);d.setUint16(14,date,true);d.setUint32(16,crc,true);d.setUint32(20,data.length,true);d.setUint32(24,data.length,true);d.setUint16(28,name.length,true);d.setUint32(42,offset,true);
+  central.push(new Uint8Array(d.buffer),name);offset+=30+name.length+data.length}
+ const centralSize=central.reduce((n,p)=>n+p.length,0),end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,list.length,true);end.setUint16(10,list.length,true);end.setUint32(12,centralSize,true);end.setUint32(16,offset,true);
+ return new Blob([...parts,...central,new Uint8Array(end.buffer)],{type:'application/zip'})}
+
+/* ---------------- PDF ---------------- */
+function concatBytes(parts){const len=parts.reduce((n,p)=>n+p.length,0),out=new Uint8Array(len);let pos=0;for(const p of parts){out.set(p,pos);pos+=p.length}return out}
+function buildPdf(pages){const enc=new TextEncoder(),objects=[null,null,null],pageIds=[];
+ for(const pg of pages){const pageId=objects.length,imageId=pageId+1,contentId=pageId+2;pageIds.push(pageId);const pw=(pg.w*.75).toFixed(2),ph=(pg.h*.75).toFixed(2),content=`q\n${pw} 0 0 ${ph} 0 0 cm\n/Im0 Do\nQ`;
+  objects[pageId]=enc.encode(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im0 ${imageId} 0 R >> >> /Contents ${contentId} 0 R >>`);
+  objects[imageId]=concatBytes([enc.encode(`<< /Type /XObject /Subtype /Image /Width ${pg.w} /Height ${pg.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${pg.bytes.length} >>\nstream\n`),pg.bytes,enc.encode('\nendstream')]);
+  objects[contentId]=enc.encode(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`)}
+ objects[1]=enc.encode('<< /Type /Catalog /Pages 2 0 R >>');objects[2]=enc.encode(`<< /Type /Pages /Kids [${pageIds.map(id=>id+' 0 R').join(' ')}] /Count ${pageIds.length} >>`);
+ const parts=[enc.encode('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n')],xref=[0];let cursor=parts[0].length;
+ for(let id=1;id<objects.length;id++){const head=enc.encode(`${id} 0 obj\n`),tail=enc.encode('\nendobj\n');xref[id]=cursor;parts.push(head,objects[id],tail);cursor+=head.length+objects[id].length+tail.length}
+ const lines=['xref',`0 ${objects.length}`,'0000000000 65535 f '];for(let id=1;id<objects.length;id++)lines.push(String(xref[id]).padStart(10,'0')+' 00000 n ');
+ lines.push('trailer',`<< /Size ${objects.length} /Root 1 0 R >>`,'startxref',String(cursor),'%%EOF');parts.push(enc.encode(lines.join('\n')));return new Blob([concatBytes(parts)],{type:'application/pdf'})}
+
+/* ---------------- Batch runner with progress & report ---------------- */
+function showProgress(title){$('ptitle').textContent=title;$('pfill').style.width='0%';$('ptext').textContent='';$('progress').hidden=false}
+function setProgress(frac,text){$('pfill').style.width=(clamp(frac,0,1)*100).toFixed(1)+'%';if(text!=null)$('ptext').textContent=text}
+async function runBatch(list,title,onTile){
+ cancelFlag=false;busy=true;showProgress(title);const report=[];
+ try{for(let i=0;i<list.length;i++){if(cancelFlag)break;const f=list[i];setProgress(i/list.length,`${i+1} / ${list.length} · ${pathOf(f)}`);
+  try{await ensureImg(f);await tick();const tiles=tilesFor(f);
+   for(let j=0;j<tiles.length;j++){if(cancelFlag)break;await onTile(f,j,tiles[j]());setProgress((i+(j+1)/tiles.length)/list.length);if(j%2)await tick()}
+   report.push({f,count:tiles.length})}
+  catch(e){console.error(e);report.push({f,err:e.message||String(e)})}
+  finally{if(f!==activeFile()){f.img=null;f.det=null}}
+  await tick()}}
+ finally{$('progress').hidden=true;busy=false}
+ return{report,cancelled:cancelFlag}}
+function showReport(report){const box=$('report'),problems=report.filter(r=>r.err||!r.count);if(report.length<2&&!problems.length){box.hidden=true;return}
+ const crops=report.reduce((n,r)=>n+(r.count||0),0),failed=report.filter(r=>r.err).length,empty=report.filter(r=>!r.err&&!r.count).length;
+ $('reportSummary').textContent=`Images: ${report.length} · slices: ${crops} · no boxes: ${empty} · failed: ${failed}`;
+ const tb=$('reportRows');tb.innerHTML='';const sorted=[...problems,...report.filter(r=>!(r.err||!r.count))];
+ for(const r of sorted){const tr=document.createElement('tr'),bad=r.err||!r.count;if(bad)tr.className='flag';tr.innerHTML=`<td>${escapeHtml(pathOf(r.f))}</td><td>${r.err?'ERR: '+escapeHtml(r.err):r.count}${bad?' ← '+escapeHtml(t('check')):''}</td>`;tb.append(tr)}
+ box.hidden=false}
+function reportCsv(report){const q=s=>'"'+String(s).replace(/"/g,'""')+'"';return'file,slices,status\n'+report.map(r=>[q(pathOf(r.f)),r.count||0,r.err?q('ERR: '+r.err):(r.count?'ok':'check')].join(',')).join('\n')}
+function zipName(f,j,ext,used){const dir=(f.rel?cleanDir(f.rel)+'/':'')+(S.perFolder?stemOf(f)+'/':''),base=`${dir}${stemOf(f)}_${j+1}`;let name=`${base}.${ext}`,k=2;while(used.has(name))name=`${base}-${k++}.${ext}`;used.add(name);return name}
+async function exportZip(all){if(busy)return;const list=all?files:[activeFile()].filter(Boolean);if(!list.length)return notify('Choose an image first.');
+ const out=[],used=new Set();
+ const res=await runBatch(list,'Creating ZIP…',async(f,j,c)=>{const{blob,ext}=await encode(c);out.push({name:zipName(f,j,ext,used),data:new Uint8Array(await blob.arrayBuffer())})});
+ showReport(res.report);if(res.cancelled)return notify('Cancelled.');if(!out.length)return notify('Nothing to export. '+t('noBoxes'));
+ if(list.length>1)out.push({name:'_summary.csv',data:new TextEncoder().encode(reportCsv(res.report))});
+ downloadBlob(zipBlob(out),list.length===1?`${stemOf(list[0])}-slices.zip`:'slicemat-slices.zip');notify(`ZIP ready: ${out.length-(list.length>1?1:0)} slices from ${list.length} image${list.length===1?'':'s'}.`)}
+async function exportPdf(){if(busy)return;if(!files.length)return notify('Choose an image first.');const pages=[];
+ const res=await runBatch(files,'Building PDF…',async(f,j,c)=>{const flat=mk(c.width,c.height),g=flat.getContext('2d');g.fillStyle=S.bgMode==='color'?S.fill:'#ffffff';g.fillRect(0,0,flat.width,flat.height);g.drawImage(c,0,0);
+  const blob=await new Promise((r,rej)=>flat.toBlob(b=>b?r(b):rej(new Error('Could not render PDF page.')),'image/jpeg',Math.max(.5,S.quality/100)));pages.push({bytes:new Uint8Array(await blob.arrayBuffer()),w:flat.width,h:flat.height})});
+ showReport(res.report);if(res.cancelled)return notify('Cancelled.');if(!pages.length)return notify('Nothing to export.');
+ downloadBlob(buildPdf(pages),files.length===1?`${stemOf(files[0])}-slices.pdf`:'slicemat-slices.pdf');notify(`PDF ready: ${pages.length} pages.`)}
+
+/* ---------------- Slice thumbnails (active image) ---------------- */
+function scheduleSlices(){clearTimeout(sliceTimer);sliceTimer=setTimeout(renderSlices,180)}
+async function renderSlices(){const f=activeFile();if(!f||!f.img){$('results').classList.add('hidden');return}const token=++sliceToken,wrap=$('sliceList');$('results').classList.remove('hidden');
+ let tiles;try{tiles=tilesFor(f)}catch(e){console.error(e);wrap.innerHTML='';return}
+ wrap.innerHTML='';if(!tiles.length){wrap.innerHTML=`<p class="muted">${escapeHtml(t('noBoxes'))}</p>`;$('resultSummary').textContent='';return}
+ const frag=[];
+ for(let i=0;i<tiles.length;i++){if(token!==sliceToken)return;const tile=tiles[i](),tw=220,th=Math.max(1,Math.min(440,Math.round(tw*tile.height/tile.width)));
+  const card=document.createElement('div');card.className='slice';const thumb=mk(tw,th);drawScaled(thumb.getContext('2d'),tile,0,0,tw,th);
+  const meta=document.createElement('div');meta.className='smeta';meta.innerHTML=`<span>Slice ${i+1}</span><small>${tile.width}×${tile.height}</small>`;
+  const btn=document.createElement('button');btn.className='btn small';btn.textContent='Download';const make=tiles[i];
+  btn.onclick=async()=>{try{const{blob,ext}=await encode(make());downloadBlob(blob,`${stemOf(f)}_${i+1}.${ext}`)}catch(e){notify(e.message)}};
+  card.append(thumb,meta,btn);frag.push(card);if(i%4===3){wrap.append(...frag.splice(0));await tick()}}
+ if(token!==sliceToken)return;wrap.append(...frag);
+ $('resultSummary').textContent=`${tiles.length} slices · ${files.length} image${files.length===1?'':'s'} in queue · Download one slice, or everything as a ZIP.`}
+
+/* ---------------- File loading (images, folders, drag & drop, paste) ---------------- */
+function ensureImg(f){if(f.img)return Promise.resolve(f.img);if(f.loading)return f.loading;
+ f.loading=new Promise((res,rej)=>{const img=new Image();img.decoding='async';img.onload=()=>{f.img=img;f.w=img.naturalWidth;f.h=img.naturalHeight;f.loading=null;res(img)};img.onerror=()=>{f.loading=null;rej(new Error('Could not load '+f.name))};img.src=f.url});return f.loading}
+const isImage=file=>!file.name.startsWith('.')&&(/^image\/(png|jpeg|webp|gif|bmp|x-ms-bmp)$/.test(file.type)||/\.(jpe?g|png|webp|gif|bmp)$/i.test(file.name));
+function addEntries(entries){const ok=entries.filter(e=>isImage(e.file));if(!ok.length)return notify('Choose JPG, PNG, WebP, BMP or GIF images.');
+ ok.sort((a,b)=>(a.rel+'/'+a.file.name).localeCompare(b.rel+'/'+b.file.name,undefined,{numeric:true}));
+ const wasEmpty=!files.length;for(const e of ok)files.push({name:e.file.name,rel:e.rel||'',file:e.file,url:URL.createObjectURL(e.file),img:null,det:null});
+ if(wasEmpty)active=0;renderQueue();refresh(false);notify(`${ok.length} image${ok.length===1?'':'s'} added to the queue.`)}
+function dirOf(p){const i=(p||'').lastIndexOf('/');return i>0?p.slice(0,i):''}
+async function walkEntry(entry,dir,out){if(entry.isFile){try{const file=await new Promise((res,rej)=>entry.file(res,rej));out.push({file,rel:dir})}catch(e){}}
+ else if(entry.isDirectory){const path=dir?dir+'/'+entry.name:entry.name,reader=entry.createReader();let batch;do{batch=await new Promise((res,rej)=>reader.readEntries(res,rej));for(const c of batch)await walkEntry(c,path,out)}while(batch.length)}}
+function renderQueue(){const q=$('queue');q.innerHTML='';q.classList.toggle('hidden',!files.length);
+ files.forEach((f,i)=>{const b=document.createElement('button');b.className='qitem'+(i===active?' active':'');const im=document.createElement('img');im.loading='lazy';im.alt='';im.src=f.url;
+  const txt=document.createElement('div');txt.style.minWidth='0';txt.innerHTML=`<span title="${escapeHtml(pathOf(f))}">${escapeHtml(f.name)}</span><small>${f.w?`${f.w} × ${f.h}px`:''}${f.rel?(f.w?' · ':'')+escapeHtml(f.rel):''}</small>`;
+  const rm=document.createElement('span');rm.className='remove';rm.textContent='×';rm.title='Remove';rm.setAttribute('role','button');
+  rm.onclick=e=>{e.stopPropagation();URL.revokeObjectURL(f.url);files.splice(i,1);if(i<active||active>=files.length)active=Math.max(0,active-1);renderQueue();refresh(false)};
+  b.onclick=()=>{if(active===i)return;const prev=activeFile();active=i;if(prev&&files.length>30){prev.img=null;prev.det=null}renderQueue();refresh(false)};
+  b.append(im,txt,rm);q.append(b)});updateCount()}
+
+/* ---------------- Events ---------------- */
+$('language').onchange=e=>translate(e.target.value);
+$('theme').onclick=()=>{const d=document.documentElement;d.dataset.theme=d.dataset.theme==='dark'?'light':'dark';$('theme').textContent=d.dataset.theme==='dark'?'☀':'☾';try{localStorage.setItem('slicemat-theme',d.dataset.theme)}catch(e){}};
+$('undo').onclick=undo;$('redo').onclick=redo;
+document.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey)||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;const k=e.key.toLowerCase();if(k==='z'&&!e.shiftKey){e.preventDefault();undo()}else if(k==='y'||(k==='z'&&e.shiftKey)){e.preventDefault();redo()}});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{if(S.mode!==b.dataset.mode)change(()=>{S.mode=b.dataset.mode;if(S.mode==='boxes'&&S.bgMode==='original'&&S.sizeMode==='original'){/* keep user choice */}})});
+$('presets').onclick=e=>{const b=e.target.closest('[data-layout]');if(!b)return;const p=b.dataset.layout;
+ if(p==='igcarousel')setLayout([3],()=>S.ratio='4:5');else if(p==='igpuzzle')setLayout([3,3,3],()=>S.ratio='1:1');else if(p==='pinterest')setLayout([1,1,1],()=>S.ratio='2:3');else{const[c,r]=p.split('x').map(Number);setUniform(r,c)}
+ document.querySelectorAll('#presets .chip').forEach(c=>c.classList.toggle('active',c===b))};
+$('applyCustom').onclick=()=>{const raw=$('rowPattern').value.split(/[ ,;]+/).filter(Boolean).map(Number);if(!raw.length||raw.some(n=>!Number.isFinite(n)||n<1||n>20)){notify('Enter row counts such as 3,6 or 4,4,2.');return}setLayout(raw)};
+$('applyUniform').onclick=()=>setUniform($('uniformRows').value,$('uniformCols').value);
+['applyCustom','applyUniform','autodetect'].forEach(id=>$(id).addEventListener('click',()=>document.querySelectorAll('#presets .chip').forEach(c=>c.classList.remove('active'))));
+$('autodetect').onclick=autoDetect;
+$('focus').onclick=()=>{if(!activeFile())return notify('Choose an image first.');change(()=>S.smart=true);notify('Smart crop is on. Each panel estimates its own important area.')};
+const num=(v,lo,hi,def)=>{const n=+v;return Number.isFinite(n)?clamp(n,lo,hi):def};
+const bind=(id,key,parse)=>$(id).addEventListener('change',e=>{const el=e.target;change(()=>setKey(key,parse(el.type==='checkbox'?el.checked:el.value)))});
+bind('ratio','ratio',v=>v);bind('smart','smart',v=>v);bind('showCuts','showCuts',v=>v);bind('showNums','showNums',v=>v);bind('order','order',v=>v);
+bind('format','format',v=>v);bind('quality','quality',v=>num(v,1,100,95));bind('sizeMode','sizeMode',v=>v);bind('outWidth','outWidth',v=>Math.round(num(v,16,10000,1080)));
+bind('outW','outW',v=>Math.round(num(v,16,10000,1080)));bind('outH','outH',v=>Math.round(num(v,16,10000,1080)));bind('upscale','upscale',v=>v);
+bind('bgMode','bgMode',v=>v);bind('fill','fill',v=>v);bind('perFolder','perFolder',v=>v);
+bind('tol','box.tol',v=>num(v,1,255,32));bind('close','box.close',v=>num(v,0,200,20));bind('soft','box.soft',v=>num(v,0,20,1));
+bind('minArea','box.minArea',v=>num(v,0.01,100,0.8));bind('pad','box.pad',v=>Math.round(num(v,0,1000,10)));bind('autoBg','box.autoBg',v=>v);bind('bgColor','box.bgColor',v=>v);
+[['tol',''],['close',''],['soft',''],['quality','%']].forEach(([id,u])=>$(id).addEventListener('input',e=>$(id+'Val').textContent=e.target.value+u));
+$('redetect').onclick=()=>{const f=activeFile();if(!f)return notify('Choose an image first.');f.det=null;refresh(false)};
+$('pickBg').onclick=()=>{if(!activeFile())return notify('Choose an image first.');picking=!picking;syncControls();if(picking)notify(t('pickNow'))};
+
+function pointerPos(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
+canvas.addEventListener('pointerdown',e=>{const f=activeFile();if(!f||!f.img)return;const p=pointerPos(e);
+ if(picking){const c=mk(1,1),g=c.getContext('2d',{willReadFrequently:true});g.drawImage(f.img,clamp(Math.floor(p.x*natW(f)),0,natW(f)-1),clamp(Math.floor(p.y*natH(f)),0,natH(f)-1),1,1,0,0,1,1);const px=g.getImageData(0,0,1,1).data,hex=rgbHex([px[0],px[1],px[2]]);picking=false;change(()=>{S.box.autoBg=false;S.box.bgColor=hex});notify('Background colour set to '+hex);return}
+ if(S.mode!=='grid'||!S.showCuts)return;const tol=.025;let best=null,dist=Infinity;
+ for(let i=1;i<S.rowCuts.length-1;i++){const d=Math.abs(p.y-S.rowCuts[i]);if(d<tol&&d<dist){best={type:'row',i};dist=d}}
+ for(let r=0;r<S.rows.length;r++)if(p.y>S.rowCuts[r]&&p.y<S.rowCuts[r+1])for(let i=1;i<S.colCuts[r].length-1;i++){const d=Math.abs(p.x-S.colCuts[r][i]);if(d<tol&&d<dist){best={type:'col',r,i};dist=d}}
+ if(best){pushHistory();drag=best;canvas.setPointerCapture(e.pointerId);e.preventDefault()}});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;const p=pointerPos(e);if(drag.type==='row'){const i=drag.i;S.rowCuts[i]=clamp(p.y,S.rowCuts[i-1]+.015,S.rowCuts[i+1]-.015)}else{const cuts=S.colCuts[drag.r],i=drag.i;cuts[i]=clamp(p.x,cuts[i-1]+.01,cuts[i+1]-.01)}render()});
+const endDrag=()=>{if(drag){drag=null;scheduleSlices();saveSettings();syncHistory()}};canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
+
+$('choose').onclick=$('addMore').onclick=()=>$('picker').click();
+$('chooseFolder').onclick=$('addFolder').onclick=()=>$('folderPicker').click();
+$('picker').onchange=e=>{addEntries([...e.target.files].map(file=>({file,rel:''})));e.target.value=''};
+$('folderPicker').onchange=e=>{addEntries([...e.target.files].map(file=>({file,rel:dirOf(file.webkitRelativePath)})));e.target.value=''};
+$('clear').onclick=()=>{if(busy)return;files.forEach(f=>URL.revokeObjectURL(f.url));files=[];active=0;history=[];future=[];picking=false;$('report').hidden=true;$('autostatus').classList.remove('show');renderQueue();syncControls();refresh(false);syncHistory()};
+$('closeReport').onclick=()=>$('report').hidden=true;
+$('pcancel').onclick=()=>{cancelFlag=true;$('ptext').textContent='Stopping…'};
+$('downloadZip').onclick=$('downloadZip2').onclick=()=>exportZip(true);$('downloadAll').onclick=()=>exportZip(false);
+$('downloadPdf').onclick=$('downloadPdf2').onclick=exportPdf;
+const stage=$('stage');
+['dragenter','dragover'].forEach(tp=>stage.addEventListener(tp,e=>{e.preventDefault();stage.classList.add('over')}));
+stage.addEventListener('dragleave',e=>{if(!stage.contains(e.relatedTarget))stage.classList.remove('over')});
+stage.addEventListener('drop',async e=>{e.preventDefault();stage.classList.remove('over');const dt=e.dataTransfer,roots=[...(dt.items||[])].map(it=>it.webkitGetAsEntry&&it.webkitGetAsEntry()).filter(Boolean),entries=[];
+ if(roots.length){for(const r of roots)await walkEntry(r,'',entries)}else[...dt.files].forEach(file=>entries.push({file,rel:''}));addEntries(entries)});
+window.addEventListener('dragover',e=>e.preventDefault());window.addEventListener('drop',e=>e.preventDefault());
+window.addEventListener('paste',e=>{const fl=[...(e.clipboardData?.files||[])];if(fl.length)addEntries(fl.map(file=>({file,rel:''})))});
+
+$('sample').onclick=async()=>{const c=mk(1500,850),g=c.getContext('2d');let name;
+ if(S.mode==='boxes'){g.fillStyle='#ffffff';g.fillRect(0,0,1500,850);const items=[[90,110,330,260,'#1d4a42'],[520,80,260,360,'#d8ad5b'],[900,140,470,230,'#b74f48'],[140,500,380,250,'#315b55'],[640,520,300,260,'#263f5d'],[1050,470,300,300,'#657b96']];
+  items.forEach(([x,y,w,h,col],i)=>{g.fillStyle='#0000001a';g.fillRect(x+10,y+12,w,h);g.fillStyle=col;g.fillRect(x,y,w,h);g.fillStyle='#ffffff';g.fillRect(x+w*.2,y+h*.32,w*.6,h*.36);g.fillStyle=col;g.font='bold 30px system-ui';g.textAlign='center';g.textBaseline='middle';g.fillText('BOX '+(i+1),x+w/2,y+h/2)});name='sample-product-boxes.png'}
+ else{g.fillStyle='#f5f7fa';g.fillRect(0,0,1500,850);const rows=[3,6],colors=['#122b4d','#d9e4f2','#d8ad5b','#315b55','#b74f48','#263f5d','#e8d9c2','#657b96','#d5c6a5'];let n=0;const gap=10,rowH=[270,550];
+  for(let r=0;r<2;r++){const cw=(1500-gap*(rows[r]+1))/rows[r];for(let col=0;col<rows[r];col++){const x=gap+col*(cw+gap),y=gap+(r?rowH[0]+gap:0),h=(r?rowH[1]:rowH[0])-gap;g.fillStyle=colors[n%colors.length];g.fillRect(x,y,cw,h);g.fillStyle='#ffffff';g.font=`bold ${r?38:48}px system-ui`;g.textAlign='center';g.fillText(`PANEL ${++n}`,x+cw/2,y+h/2);g.font='18px system-ui';g.fillText(`${r?'BOTTOM':'TOP'} ROW`,x+cw/2,y+h/2+35)}}name='sample-3-and-6-grid.png'}
+ const blob=await new Promise(r=>c.toBlob(r,'image/png'));files.forEach(f=>URL.revokeObjectURL(f.url));files=[];active=0;addEntries([{file:new File([blob],name,{type:'image/png'}),rel:''}]);
+ if(S.mode==='grid'){await ensureImg(files[0]);setLayout([3,6]);autoDetect()}};
+
+window.addEventListener('resize',()=>{if(activeFile())render()});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('install').hidden=false});
+$('install').onclick=async()=>{if(!installPrompt)return notify('Use your browser menu to install this app.');installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('install').hidden=true};
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Service worker registration failed',err)));
+
+/* ---------------- Init ---------------- */
+$('year').textContent=new Date().getFullYear();
+try{const th=localStorage.getItem('slicemat-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=th;$('theme').textContent=th==='dark'?'☀':'☾'}catch(e){}
+let savedLang='en';try{savedLang=localStorage.getItem('slicemat-lang')||'en'}catch(e){}
+translate(savedLang);renderQueue();syncHistory();
+
+/* ---- file size limit, output presets and format help ---- */
+bind('maxKB','maxKB',v=>Math.max(0,Math.round(+v||0)));
+document.querySelectorAll('#kbChips .chip').forEach(b=>b.onclick=()=>change(()=>{S.maxKB=+b.dataset.kb}));
+const OUTP={insta:{format:'image/jpeg',quality:95,maxKB:0,sizeMode:'width',outWidth:1080},web:{format:'image/webp',quality:85,maxKB:200,sizeMode:'width',outWidth:1500},max:{format:'image/png',quality:100,maxKB:0,sizeMode:'original'}};
+document.querySelectorAll('#outPresets .chip').forEach(b=>b.onclick=()=>change(()=>Object.assign(S,OUTP[b.dataset.op])));
+const FH={'image/png':'PNG keeps every pixel and transparency. The files are large, and a size limit cannot shrink them. Use JPG or WebP for that.','image/jpeg':'JPG works everywhere: Instagram, WhatsApp, email and print. It is the safest choice for posting.','image/webp':'WebP makes small files for websites. Instagram, WhatsApp and some apps cannot open WebP, so a grid you post may not show. Choose JPG for social media.','image/bmp':'BMP files are very large. Pick it only if another program asks for it.'};
+const _sync=syncControls;
+syncControls=function(){_sync();
+  const fh=$('fmtHelp');fh.textContent=FH[S.format]||'';fh.classList.toggle('warnhelp',S.format==='image/webp');
+  $('maxKB').value=S.maxKB||'';document.querySelectorAll('#kbChips .chip').forEach(c=>c.classList.toggle('active',+c.dataset.kb===(S.maxKB||0)));
+  const png=S.format==='image/png'||S.format==='image/bmp';$('maxKB').disabled=false;
+  $('kbHelp').innerHTML=S.maxKB>0?(png?'A size limit does not work with '+(S.format==='image/png'?'PNG':'BMP')+'. <button class="chip" id="toWebp">Switch to JPG</button>':'Each slice will be at most '+S.maxKB+' KB. Slicemat lowers the quality first and shrinks the slice a little only if it has to.'):'Pick a size to compress every slice. 1 MB is 1024 KB.';
+  const tb=$('toWebp');if(tb)tb.onclick=()=>change(()=>{S.format='image/jpeg'})};
+let _warnedWebp=false;$('format').addEventListener('change',()=>{if(S.format==='image/webp'&&!_warnedWebp){_warnedWebp=true;notify('WebP will not upload to Instagram or WhatsApp. Choose JPG for posting.')}});
+syncControls();
+window.__slicemat={get S(){return S},get files(){return files},detectBoxes,tilesFor};
+})();
+</script>
+</body></html>
